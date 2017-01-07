@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "119105926121",
+    "firebase_url": "https://chorepocalypse.firebaseio.com",
+    "project_id": "chorepocalypse",
+    "storage_bucket": "chorepocalypse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119105926121:android:a1f25ae1f6635e61",
+        "android_client_info": {
+          "package_name": "com.zonkey.chorepocalypse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "119105926121-kntd5fbbgpp3s9he3fiejfbh4ol2mqsr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zonkey.chorepocalypse",
+            "certificate_hash": "1E577607387001020E4FCCD3561FAE8178F77F5D"
+          }
+        },
+        {
+          "client_id": "119105926121-ui5rbk496g5jjnj984lbj1q2sssd3u14.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-la1F7aDcbbCBEnmW0PO9Df_PTJcbOUk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "119105926121-ui5rbk496g5jjnj984lbj1q2sssd3u14.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
