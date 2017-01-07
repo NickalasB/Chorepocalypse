@@ -31,6 +31,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'    //Library for easy view casting
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'    //Library for custom fonts
+    compile 'com.github.provigen:ProviGen-lib:2.0.+' //library for creating content provider
 
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
