@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content_main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -14,8 +15,12 @@
     tools:showIn="@layout/activity_main"
     tools:context="com.zonkey.chorepocalypse.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <include layout="@layout/chore_detail"/>
+
+    <fragment
+        android:name="com.zonkey.chorepocalypse.ChoreListFragment"
+        android:id="@+id/chore_list_fragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
-</RelativeLayout>
+        tools:layout="@layout/fragment_chore_list" />
+</LinearLayout>
