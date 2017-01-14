@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.zonkey.chorepocalypse.adapters.ChoreListAdapter;
+import com.zonkey.chorepocalypse.adapters.viewHolders.ChoreListAdapterViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,7 +79,7 @@ public class ChoreListFragment extends Fragment {
 
         mChoreListAdapter = new ChoreListAdapter(getActivity(), new ChoreListAdapter.ChoreListAdapterOnClickHandler() {
             @Override
-            public void onClick(ChoreListAdapter.ChoreListAdapterViewHolder vh) {
+            public void onClick(ChoreListAdapterViewHolder vh) {
                 Toast.makeText(getActivity(), "Nice job Nick", Toast.LENGTH_SHORT).show();
             }
         });
