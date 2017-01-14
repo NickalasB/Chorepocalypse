@@ -1,4 +1,4 @@
-package com.zonkey.chorepocalypse.adapters;
+package com.zonkey.chorepocalypse.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.adapters.viewHolders.ChoreListAdapterViewHolder;
+import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 /**
  * Created by nickbradshaw on 1/14/17.

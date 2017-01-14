@@ -13,12 +13,12 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main"
-    tools:context="com.zonkey.chorepocalypse.MainActivity">
+    tools:context=".ui.activities.MainActivity">
 
     <include layout="@layout/chore_detail"/>
 
     <fragment
-        android:name="com.zonkey.chorepocalypse.ChoreListFragment"
+        android:name="com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment"
         android:id="@+id/chore_list_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

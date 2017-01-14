@@ -1,4 +1,4 @@
-package com.zonkey.chorepocalypse.adapters.viewHolders;
+package com.zonkey.chorepocalypse.ui.viewHolders;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

@@ -1,4 +1,4 @@
-package com.zonkey.chorepocalypse;
+package com.zonkey.chorepocalypse.ui.fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,8 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.zonkey.chorepocalypse.adapters.ChoreListAdapter;
-import com.zonkey.chorepocalypse.adapters.viewHolders.ChoreListAdapterViewHolder;
+import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.ui.adapters.ChoreListAdapter;
+import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

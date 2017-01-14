@@ -1,4 +1,4 @@
-package com.zonkey.chorepocalypse;
+package com.zonkey.chorepocalypse.ui.activities;
 
 import android.content.Context;
 import android.net.Uri;
@@ -10,6 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
