@@ -4,10 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.zonkey.chorepocalypse.adapters.ChoreListAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,8 +19,10 @@ import butterknife.ButterKnife;
 
 public class ChoreListFragment extends Fragment {
 
-    @BindView(R.id.chore_list_recycler_view)
-    RecyclerView mChoreRecyclerView;
+    @BindView(R.id.chore_list_recycler_view) RecyclerView mChoreRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private ChoreListAdapter mChoreListAdapter;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -65,6 +71,19 @@ public class ChoreListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chore_list, container, false);
         ButterKnife.bind(this, rootView);
+
+        mLinearLayoutManager = new LinearLayoutManager(getActivity());
+        mChoreRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mChoreRecyclerView.setHasFixedSize(true);
+
+        mChoreListAdapter = new ChoreListAdapter(getActivity(), new ChoreListAdapter.ChoreListAdapterOnClickHandler() {
+            @Override
+            public void onClick(ChoreListAdapter.ChoreListAdapterViewHolder vh) {
+                Toast.makeText(getActivity(), "Nice job Nick", Toast.LENGTH_SHORT).show();
+            }
+        });
+        mChoreRecyclerView.setAdapter(mChoreListAdapter);
+
         return rootView;
     }
 
