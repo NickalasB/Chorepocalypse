@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -43,11 +44,11 @@
         app:columnCount="2">
 
         <Button
-            android:layout_height="wrap_content"
             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Set deadline"
             app:layout_columnSpan="2"
-            app:layout_columnWeight="1"/>
+            app:layout_columnWeight="1" />
 
         <TextView
             android:id="@+id/chore_status_textview"
@@ -67,10 +68,11 @@
     </android.support.v7.widget.GridLayout>
 
     <LinearLayout
+        style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/material_design_horizontal_margin"
         android:layout_below="@+id/add_chore_pic">
+
         <TextView
             android:id="@+id/chore_reward"
             android:layout_width="wrap_content"
@@ -82,8 +84,8 @@
             android:id="@+id/current_chore_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="250"
             android:hint="@string/add_chore_points_hint"
+            android:text="250"
             app:layout_columnWeight="1" />
     </LinearLayout>
 

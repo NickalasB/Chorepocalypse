@@ -1,6 +1,7 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements ChoreListFragment
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent addChoreIntent = new Intent(getApplicationContext(), AddChoreActivity.class);
+                startActivity(addChoreIntent);
             }
         });
     }
