@@ -2,10 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/colorBackgroundDark">
 
     <TextView
         android:id="@+id/chore_title"
+        style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Clean Sink"
@@ -14,10 +16,12 @@
 
     <ImageView
         android:id="@+id/chore_pic"
-        android:layout_below="@id/chore_title"
+        style="@style/material_design_horizontal_margin"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_margin="8dp"
+        android:layout_below="@id/chore_title"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/detail_chore_picture"
         android:maxHeight="96dp"
@@ -28,41 +32,37 @@
 
     <LinearLayout
         android:id="@+id/chore_linear_layout"
-        android:layout_width="wrap_content"
+        style="@style/material_design_horizontal_margin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/chore_pic"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/chore_reward"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
             android:text="Reward Value: 250"
-            android:textSize="24sp"
-            app:layout_columnSpan="1" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/chore_reward_total"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:text="Total Reward: 1,525"
-            android:textSize="24sp"
-            app:layout_column="0"
-            app:layout_columnSpan="2" />
+            android:text="Total Rewards: 1,525"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_grid_layout"
+        style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:layout_below="@+id/chore_title"
         android:layout_marginTop="9dp"
         android:layout_toEndOf="@+id/chore_pic"
         android:layout_toRightOf="@+id/chore_pic"
+        android:elevation="4dp"
         app:columnCount="2">
 
         <TextView
