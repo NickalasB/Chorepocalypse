@@ -10,6 +10,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
         release {
@@ -25,19 +26,23 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'com.android.support:design:25.1.0'
+    def supportLibVersion = "25.1.0";
 
-    compile 'com.jakewharton:butterknife:8.4.0'    //Library for easy view casting
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.2.0'    //Library for custom fonts
-    compile 'com.github.provigen:ProviGen-lib:2.0.+' //library for creating content provider
+    compile "com.android.support:appcompat-v7:$supportLibVersion"
+    compile "com.android.support:design:$supportLibVersion"
+    compile "com.android.support:gridlayout-v7:$supportLibVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibVersion"
+    compile "com.android.support:design:$supportLibVersion"
 
+    compile 'com.jakewharton:butterknife:8.4.0'
+    compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.github.provigen:ProviGen-lib:2.0.+'
     compile 'com.google.firebase:firebase-storage:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-core:10.0.1'
-
     testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
 }
+
 
 apply plugin: 'com.google.gms.google-services'
