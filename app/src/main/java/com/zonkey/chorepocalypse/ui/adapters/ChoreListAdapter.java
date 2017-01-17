@@ -43,6 +43,6 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 30;
     }
 }

@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.ui.adapters.ChoreListAdapter;
@@ -81,7 +80,6 @@ public class ChoreListFragment extends Fragment {
         mChoreListAdapter = new ChoreListAdapter(getActivity(), new ChoreListAdapter.ChoreListAdapterOnClickHandler() {
             @Override
             public void onClick(ChoreListAdapterViewHolder vh) {
-                Toast.makeText(getActivity(), "Nice job Nick", Toast.LENGTH_SHORT).show();
             }
         });
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
