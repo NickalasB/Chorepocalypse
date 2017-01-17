@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@color/colorBackgroundDark"
+    android:elevation="4dp">
+
+    <EditText
+        android:id="@+id/add_chore_title"
+        style="@style/material_design_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_chore_name_hint"
+        android:textSize="32sp"
+        app:layout_columnSpan="3" />
+
+    <ImageView
+        android:id="@+id/add_chore_pic"
+        style="@style/material_design_horizontal_margin"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_below="@id/add_chore_title"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/detail_chore_picture"
+        android:maxHeight="96dp"
+        android:maxWidth="96dp"
+        android:src="@drawable/sink"
+        app:layout_column="0"
+        app:layout_rowSpan="2" />
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/add_chore_grid_layout"
+        style="@style/material_design_horizontal_margin"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:layout_below="@+id/add_chore_title"
+        android:layout_marginTop="9dp"
+        android:layout_toEndOf="@+id/add_chore_pic"
+        android:layout_toRightOf="@+id/add_chore_pic"
+        app:columnCount="2">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Set deadline"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1"/>
+
+        <TextView
+            android:id="@+id/chore_status_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_chore_needs_approval" />
+
+        <CheckBox
+            android:id="@+id/chore_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:checked="true"
+            app:layout_columnWeight="1"
+            app:layout_gravity="left" />
+    </android.support.v7.widget.GridLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/material_design_horizontal_margin"
+        android:layout_below="@+id/add_chore_pic">
+        <TextView
+            android:id="@+id/chore_reward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reward_value_label"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/current_chore_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="250"
+            android:hint="@string/add_chore_points_hint"
+            app:layout_columnWeight="1" />
+    </LinearLayout>
+
+</RelativeLayout>

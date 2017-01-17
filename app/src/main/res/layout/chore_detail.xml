@@ -31,28 +31,44 @@
         app:layout_column="0"
         app:layout_rowSpan="2" />
 
-    <LinearLayout
+    <android.support.v7.widget.GridLayout
         android:id="@+id/chore_linear_layout"
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chore_pic"
-        android:orientation="vertical">
+        android:layout_alignEnd="@+id/chore_grid_layout"
+        android:layout_alignRight="@+id/chore_grid_layout"
+        android:layout_below="@+id/chore_pic"
+        app:columnCount="2">
 
-        <TextView
-            android:id="@+id/chore_reward"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reward Value: 250"
-            android:textSize="16sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/reward_value_label"
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/chore_reward_total"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Total Rewards: 1,525"
-            android:textSize="16sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/current_chore_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="250"
+        app:layout_columnWeight="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail_total_rewards"
+        android:textSize="16sp"
+        app:layout_column="0"
+        app:layout_row="1" />
+
+    <TextView
+        android:id="@+id/total_current_chore_points"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1,525"
+        app:layout_columnWeight="1" />
+</android.support.v7.widget.GridLayout>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_grid_layout"
