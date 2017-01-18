@@ -8,11 +8,13 @@
     android:elevation="4dp">
 
     <EditText
-        android:id="@+id/add_chore_title"
+        android:id="@+id/add_chore_name"
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/add_chore_name_hint"
+        android:singleLine="true"
+        android:imeOptions="actionDone"
         android:textSize="32sp"
         app:layout_columnSpan="3" />
 
@@ -21,7 +23,7 @@
         style="@style/material_design_horizontal_margin"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_below="@id/add_chore_title"
+        android:layout_below="@id/add_chore_name"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
@@ -37,13 +39,14 @@
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="96dp"
-        android:layout_below="@+id/add_chore_title"
+        android:layout_below="@+id/add_chore_name"
         android:layout_marginTop="9dp"
         android:layout_toEndOf="@+id/add_chore_pic"
         android:layout_toRightOf="@+id/add_chore_pic"
         app:columnCount="2">
 
         <Button
+            android:id="@+id/chore_due_date_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Set deadline"
@@ -68,10 +71,12 @@
     </android.support.v7.widget.GridLayout>
 
     <LinearLayout
+        android:id="@+id/reward_value_linear_layout"
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_chore_pic">
+        android:layout_below="@+id/add_chore_pic"
+        android:layout_marginBottom="8dp">
 
         <TextView
             android:id="@+id/chore_reward"
@@ -84,9 +89,19 @@
             android:id="@+id/current_chore_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:hint="@string/add_chore_points_hint"
             android:text="250"
-            app:layout_columnWeight="1" />
+            />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/add_chore_button"
+        android:layout_below="@id/reward_value_linear_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_chore_button_text"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"/>
 
 </RelativeLayout>

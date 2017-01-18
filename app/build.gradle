@@ -38,6 +38,7 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.github.provigen:ProviGen-lib:2.0.+'
     compile 'com.google.firebase:firebase-storage:10.0.1'
+    compile 'com.google.firebase:firebase-database:10.0.1'
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-core:10.0.1'
     compile 'com.android.support:support-v4:25.1.0'

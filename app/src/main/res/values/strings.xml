@@ -13,5 +13,6 @@
     <string name="add_chore_name_hint">Chore Name</string>
     <string name="add_chore_points_hint">Add chore points</string>
     <string name="add_chore_needs_approval">Needs Approval?</string>
+    <string name="add_chore_button_text">Add Chore</string>
 
 </resources>

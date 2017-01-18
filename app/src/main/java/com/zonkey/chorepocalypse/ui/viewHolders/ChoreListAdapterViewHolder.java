@@ -17,8 +17,8 @@ import butterknife.ButterKnife;
 
 public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    @BindView(R.id.chore_test_textview)
-    TextView mChoreTestTextView;
+    @BindView(R.id.chore_list_textview)
+    TextView mChoreListNameTextView;
 
     public ChoreListAdapterViewHolder(View itemView) {
         super(itemView);
@@ -32,7 +32,7 @@ public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implemen
         Toast.makeText(view.getContext(), "You clicked", Toast.LENGTH_SHORT).show();
     }
 
-    public void updateDisplay(){
-        mChoreTestTextView.setText("Chore number 1");
+    public void updateDisplay() {
+        mChoreListNameTextView.setText("Chore number 1");
     }
 }

@@ -7,7 +7,7 @@
     >
 
     <TextView
-        android:id="@+id/chore_test_textview"
+        android:id="@+id/chore_list_textview"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:text="THIS IS A TEST FOR POPULATING CHORE LIST" />

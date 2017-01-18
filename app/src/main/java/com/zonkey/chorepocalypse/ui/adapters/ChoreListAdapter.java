@@ -18,7 +18,6 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
     final private ChoreListAdapterOnClickHandler mClickHandler;
     private LayoutInflater mLayoutInflater;
 
-
     public interface ChoreListAdapterOnClickHandler {
         void onClick(ChoreListAdapterViewHolder vh);
     }
@@ -38,7 +37,6 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
     @Override
     public void onBindViewHolder(ChoreListAdapterViewHolder choreListAdapterViewHolder, int position) {
         choreListAdapterViewHolder.updateDisplay();
-
     }
 
     @Override
