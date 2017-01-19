@@ -9,23 +9,25 @@ public class Chore {
     private String choreName;
     private String choreReward;
 
-    public Chore(){
+    public Chore(String cn, String cr) {
+        choreName = cn;
+        choreReward = cr;
     }
 
-    public Chore(String choreName, String choreReward){
+    public String getChoreName() {
+        return choreName;
+    }
+
+    public void setChoreName(String choreName) {
         this.choreName = choreName;
+    }
+
+    public String getChoreReward() {
+        return choreReward;
+    }
+
+    public void setChoreReward(String choreReward) {
         this.choreReward = choreReward;
     }
 
-    public String getChoreName(){return choreName;}
-
-    public void setChoreName(String choreName){this.choreName = choreName;}
-
-    public String getChoreReward() {return choreReward;}
-
-    public void setChoreReward(String choreReward) {this.choreReward = choreReward;}
-
-//    public int getChoreReward() {return choreReward;}
-//
-//    public void setChoreReward(int choreReward) {this.choreReward = choreReward;}
 }
