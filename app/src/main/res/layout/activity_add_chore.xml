@@ -91,7 +91,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/add_chore_points_hint"
-            android:text="250"
             />
     </LinearLayout>
 

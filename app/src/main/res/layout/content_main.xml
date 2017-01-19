@@ -10,7 +10,12 @@
     tools:context=".ui.activities.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <include layout="@layout/chore_detail"/>
+    <fragment
+        android:id="@+id/chore_detail_fragment"
+        android:name="com.zonkey.chorepocalypse.ui.fragments.ChoreDetailFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout="@layout/fragment_chore_detail" />
 
     <fragment
         android:id="@+id/chore_list_fragment"

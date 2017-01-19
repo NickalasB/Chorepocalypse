@@ -7,20 +7,20 @@
     android:elevation="4dp">
 
     <TextView
-        android:id="@+id/chore_title"
+        android:id="@+id/detail_chore_title"
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Clean Sink"
         android:textSize="32sp"
+        android:text="Add a chore!"
         app:layout_columnSpan="3" />
 
     <ImageView
-        android:id="@+id/chore_pic"
+        android:id="@+id/detail_chore_pic"
         style="@style/material_design_horizontal_margin"
         android:layout_width="96dp"
         android:layout_height="96dp"
-        android:layout_below="@id/chore_title"
+        android:layout_below="@id/detail_chore_title"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
@@ -31,43 +31,58 @@
         app:layout_column="0"
         app:layout_rowSpan="2" />
 
-    <LinearLayout
+    <android.support.v7.widget.GridLayout
         android:id="@+id/chore_linear_layout"
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chore_pic"
-        android:orientation="vertical">
+        android:layout_alignEnd="@+id/chore_grid_layout"
+        android:layout_alignRight="@+id/chore_grid_layout"
+        android:layout_below="@+id/detail_chore_pic"
+        app:columnCount="2">
 
         <TextView
-            android:id="@+id/chore_reward"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Reward Value: 250"
+            android:text="@string/reward_value_label"
             android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/chore_reward_total"
-            android:layout_width="match_parent"
+            android:id="@+id/detail_current_chore_points"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Total Rewards: 1,525"
-            android:textSize="16sp" />
-    </LinearLayout>
+            app:layout_columnWeight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/detail_total_rewards"
+            android:textSize="16sp"
+            app:layout_column="0"
+            app:layout_row="1" />
+
+        <TextView
+            android:id="@+id/detail_total_chore_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1,525"
+            app:layout_columnWeight="1" />
+    </android.support.v7.widget.GridLayout>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_grid_layout"
         style="@style/material_design_horizontal_margin"
         android:layout_width="match_parent"
         android:layout_height="96dp"
-        android:layout_below="@+id/chore_title"
+        android:layout_below="@+id/detail_chore_title"
         android:layout_marginTop="9dp"
-        android:layout_toEndOf="@+id/chore_pic"
-        android:layout_toRightOf="@+id/chore_pic"
+        android:layout_toEndOf="@+id/detail_chore_pic"
+        android:layout_toRightOf="@+id/detail_chore_pic"
         android:elevation="4dp"
         app:columnCount="2">
 
         <TextView
-            android:id="@+id/chore_due_date"
+            android:id="@+id/detail_chore_due_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -79,13 +94,13 @@
             app:layout_gravity="left" />
 
         <TextView
-            android:id="@+id/chore_status_textview"
+            android:id="@+id/detail_chore_status_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Approved" />
 
         <CheckBox
-            android:id="@+id/chore_checkbox"
+            android:id="@+id/detail_chore_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"

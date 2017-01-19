@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.ui.fragments.ChoreDetailFragment;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;
 
 import butterknife.BindView;
@@ -20,13 +21,13 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity implements ChoreListFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ChoreListFragment.OnFragmentInteractionListener, ChoreDetailFragment.OnFragmentInteractionListener {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.fab)
     FloatingActionButton mFab;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements ChoreListFragment
         );
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         setSupportActionBar(mToolbar);
 
         mFab.setOnClickListener(new View.OnClickListener() {

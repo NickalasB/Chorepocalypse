@@ -20,7 +20,8 @@ import butterknife.ButterKnife;
 
 public class ChoreListFragment extends Fragment {
 
-    @BindView(R.id.chore_list_recycler_view) RecyclerView mChoreRecyclerView;
+    @BindView(R.id.chore_list_recycler_view)
+    RecyclerView mChoreRecyclerView;
     private LinearLayoutManager mLinearLayoutManager;
     private ChoreListAdapter mChoreListAdapter;
 

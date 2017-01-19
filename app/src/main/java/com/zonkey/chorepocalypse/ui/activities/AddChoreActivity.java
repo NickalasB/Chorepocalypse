@@ -25,8 +25,10 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AddChoreActivity extends AppCompatActivity {
 
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mChoreDatabaseReference;
+
+    private String mChoreName;
+    private String mChorePoints;
 
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
@@ -49,9 +51,7 @@ public class AddChoreActivity extends AppCompatActivity {
     @BindView(R.id.add_chore_button)
     Button mAddChoreButton;
 
-    int points = 0;
-
-
+    Intent choreDetailsIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +65,12 @@ public class AddChoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_chore);
         ButterKnife.bind(this);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        choreDetailsIntent = new Intent(getApplicationContext(),MainActivity.class);
+
+        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
         mChoreDatabaseReference = mFirebaseDatabase.getReference().child("chores");
 
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
 
         mAddChoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,15 +87,30 @@ public class AddChoreActivity extends AppCompatActivity {
     }
 
     private void addChore() {
-        Chore newChore = new Chore(mChoreNameEditText.getText().toString(), mChorePointsEditText.getText().toString());
+
+        Chore newChore = new Chore(mChoreName, mChorePoints);
         mChoreDatabaseReference.push().setValue(newChore);
+        mChoreName = mChoreNameEditText.getText().toString();
+        mChorePoints = mChorePointsEditText.getText().toString();
+
+        putChoreStringExtras();
+        Toast.makeText(AddChoreActivity.this, mChoreName + " added to list", Toast.LENGTH_SHORT).show();
+
         //clear text after setting chore
         mChoreNameEditText.setText("");
         mChorePointsEditText.setText("");
-        Toast.makeText(AddChoreActivity.this, "Chore set!", Toast.LENGTH_SHORT).show();
-        Intent i = new Intent(getApplicationContext(),AddChoreActivity.class);
-        i.putExtra("chore_name", mChoreNameEditText.getText().toString())
-        .putExtra("chore_points", mChorePointsEditText.getText().toString());
+
     }
 
+    private void putChoreStringExtras() {
+        choreDetailsIntent.putExtra("chore_name", mChoreName)
+                .putExtra("chore_points", mChorePoints);
+    }
+
+    @Override
+    public void onBackPressed() {
+        putChoreStringExtras();
+        startActivity(choreDetailsIntent);
+        super.onBackPressed();
+    }
 }
