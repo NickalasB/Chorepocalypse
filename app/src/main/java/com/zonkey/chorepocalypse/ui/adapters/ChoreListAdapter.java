@@ -6,17 +6,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.data.Chore;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by nickbradshaw on 1/14/17.
  */
 
-public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> {
+public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ChildEventListener {
 
     final private ChoreListAdapterOnClickHandler mClickHandler;
     private LayoutInflater mLayoutInflater;
+    private List<Chore> mChoreList;
+    private DatabaseReference mChoreReference;
 
     public interface ChoreListAdapterOnClickHandler {
         void onClick(ChoreListAdapterViewHolder vh);
@@ -25,6 +36,8 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
     public ChoreListAdapter(Context context, ChoreListAdapterOnClickHandler clickHandler) {
         mClickHandler = clickHandler;
         mLayoutInflater = LayoutInflater.from(context);
+        mChoreList = new ArrayList<>();
+        mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
     }
 
     @Override
@@ -41,6 +54,51 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
 
     @Override
     public int getItemCount() {
-        return 30;
+        return mChoreList.size();
     }
+
+    public void onPause() {
+        mChoreReference.removeEventListener(this);
+
+    }
+
+    public void onResume() {
+        mChoreReference.addChildEventListener(this);
+
+    }
+
+    @Override
+    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+        Chore chore = dataSnapshot.getValue(Chore.class);
+        int index = mChoreList.size();
+        if (!mChoreList.contains(chore)) {
+            mChoreList.add(chore);
+            notifyItemInserted(index);
+        }
+    }
+
+    @Override
+    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onChildRemoved(DataSnapshot dataSnapshot) {
+        Chore chore = dataSnapshot.getValue(Chore.class);
+        int index = mChoreList.indexOf(chore);
+        if (mChoreList.remove(chore)) {
+            notifyItemRemoved(index);
+        }
+    }
+
+    @Override
+    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+    }
+
+    @Override
+    public void onCancelled(DatabaseError databaseError) {
+
+    }
+
 }

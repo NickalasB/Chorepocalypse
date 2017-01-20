@@ -14,6 +14,9 @@ public class Chore {
         choreReward = cr;
     }
 
+    public Chore() {
+    }
+
     public String getChoreName() {
         return choreName;
     }
@@ -30,4 +33,23 @@ public class Chore {
         this.choreReward = choreReward;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Chore chore = (Chore) o;
+
+        if (choreName != null ? !choreName.equals(chore.choreName) : chore.choreName != null)
+            return false;
+        return choreReward != null ? choreReward.equals(chore.choreReward) : chore.choreReward == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = choreName != null ? choreName.hashCode() : 0;
+        result = 31 * result + (choreReward != null ? choreReward.hashCode() : 0);
+        return result;
+    }
 }

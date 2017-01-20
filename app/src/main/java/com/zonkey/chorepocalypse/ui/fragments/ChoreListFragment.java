@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.ui.adapters.ChoreListAdapter;
@@ -22,6 +23,10 @@ public class ChoreListFragment extends Fragment {
 
     @BindView(R.id.chore_list_recycler_view)
     RecyclerView mChoreRecyclerView;
+
+    @BindView(R.id.empty_recyclerview)
+    TextView mEmptyRecyclerView;
+
     private LinearLayoutManager mLinearLayoutManager;
     private ChoreListAdapter mChoreListAdapter;
 
@@ -83,11 +88,23 @@ public class ChoreListFragment extends Fragment {
             public void onClick(ChoreListAdapterViewHolder vh) {
             }
         });
+        checkAdapterIsEmpty();
+
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
 
         return rootView;
     }
 
+    private Boolean checkAdapterIsEmpty() {
+        if (mChoreListAdapter.getItemCount() == 0) {
+            mEmptyRecyclerView.setVisibility(View.VISIBLE);
+            return true;
+        } else {
+            mEmptyRecyclerView.setVisibility(View.GONE);
+        }
+        return false;
+    }
+    
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -125,5 +142,17 @@ public class ChoreListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mChoreListAdapter.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mChoreListAdapter.onResume();
     }
 }
