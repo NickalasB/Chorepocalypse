@@ -1,32 +1,23 @@
 package com.zonkey.chorepocalypse.ui.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.data.Chore;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by nickbradshaw on 1/14/17.
  */
 
-public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ChildEventListener {
+public class ChoreListAdapter extends com.zonkey.chorepocalypse.listeners.ChoreListListener {
 
     final private ChoreListAdapterOnClickHandler mClickHandler;
     private LayoutInflater mLayoutInflater;
-    private List<Chore> mChoreList;
     private DatabaseReference mChoreReference;
 
     public interface ChoreListAdapterOnClickHandler {
@@ -34,9 +25,9 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
     }
 
     public ChoreListAdapter(Context context, ChoreListAdapterOnClickHandler clickHandler) {
+        super();
         mClickHandler = clickHandler;
         mLayoutInflater = LayoutInflater.from(context);
-        mChoreList = new ArrayList<>();
         mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
     }
 
@@ -49,7 +40,11 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
 
     @Override
     public void onBindViewHolder(ChoreListAdapterViewHolder choreListAdapterViewHolder, int position) {
-        choreListAdapterViewHolder.updateDisplay();
+
+        choreListAdapterViewHolder
+                .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
+        choreListAdapterViewHolder
+                .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
     }
 
     @Override
@@ -64,40 +59,6 @@ public class ChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewH
 
     public void onResume() {
         mChoreReference.addChildEventListener(this);
-
-    }
-
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Chore chore = dataSnapshot.getValue(Chore.class);
-        int index = mChoreList.size();
-        if (!mChoreList.contains(chore)) {
-            mChoreList.add(chore);
-            notifyItemInserted(index);
-        }
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Chore chore = dataSnapshot.getValue(Chore.class);
-        int index = mChoreList.indexOf(chore);
-        if (mChoreList.remove(chore)) {
-            notifyItemRemoved(index);
-        }
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
 
     }
 
