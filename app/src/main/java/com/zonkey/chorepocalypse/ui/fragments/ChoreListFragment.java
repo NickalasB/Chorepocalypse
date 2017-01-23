@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.ui.adapters.ChoreListAdapter;
+import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import butterknife.BindView;
@@ -28,9 +28,8 @@ public class ChoreListFragment extends Fragment {
     TextView mEmptyRecyclerView;
 
     private LinearLayoutManager mLinearLayoutManager;
-    private ChoreListAdapter mChoreListAdapter;
-
-
+    private BaseChoreListAdapter mChoreListAdapter;
+    
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -83,28 +82,24 @@ public class ChoreListFragment extends Fragment {
         mChoreRecyclerView.setLayoutManager(mLinearLayoutManager);
         mChoreRecyclerView.setHasFixedSize(true);
 
-        mChoreListAdapter = new ChoreListAdapter(getActivity(), new ChoreListAdapter.ChoreListAdapterOnClickHandler() {
+        mChoreListAdapter = new BaseChoreListAdapter(getActivity(), new BaseChoreListAdapter.ChoreListAdapterInterface() {
             @Override
             public void onClick(ChoreListAdapterViewHolder vh) {
             }
+
+            @Override
+            public void onItemCountChange(int itemCount) {
+                if (itemCount == 0) {
+                    mEmptyRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyRecyclerView.setVisibility(View.GONE);
+                }
+            }
         });
-        checkAdapterIsEmpty();
-
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
-
         return rootView;
     }
 
-    private Boolean checkAdapterIsEmpty() {
-        if (mChoreListAdapter.getItemCount() == 0) {
-            mEmptyRecyclerView.setVisibility(View.VISIBLE);
-            return true;
-        } else {
-            mEmptyRecyclerView.setVisibility(View.GONE);
-        }
-        return false;
-    }
-    
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
