@@ -14,5 +14,6 @@
     <string name="add_chore_points_hint">Add chore points</string>
     <string name="add_chore_needs_approval">Needs Approval?</string>
     <string name="add_chore_button_text">Add Chore</string>
+    <string name="content_description_photo_picker_button">Photo picker button</string>
 
 </resources>
