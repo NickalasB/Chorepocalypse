@@ -1,4 +1,4 @@
-package com.zonkey.chorepocalypse.data;
+package com.zonkey.chorepocalypse.models;
 
 /**
  * Created by nickbradshaw on 1/18/17.
