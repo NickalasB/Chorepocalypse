@@ -10,10 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.zonkey.chorepocalypse.R;
 
 import butterknife.BindView;
@@ -33,7 +33,7 @@ public class ChoreDetailFragment extends Fragment {
     TextView mChoreTitle;
 
     @BindView(R.id.detail_chore_pic)
-    ImageView mChorePic;
+    RoundedImageView mChorePic;
 
     @BindView(R.id.detail_current_chore_points)
     TextView mCurrentChorePoints;

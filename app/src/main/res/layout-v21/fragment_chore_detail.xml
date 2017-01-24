@@ -8,32 +8,33 @@
 
     <TextView
         android:id="@+id/detail_chore_title"
-        style="@style/material_design_horizontal_margin"
+        style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="32sp"
         android:text="Add a chore!"
         app:layout_columnSpan="3" />
 
-    <ImageView
+    <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/detail_chore_pic"
-        style="@style/material_design_horizontal_margin"
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        style="@style/MaterialDesignHorizontalMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/detail_chore_title"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/detail_chore_picture"
-        android:maxHeight="96dp"
-        android:maxWidth="96dp"
         android:src="@drawable/sink"
         app:layout_column="0"
-        app:layout_rowSpan="2" />
+        app:layout_rowSpan="2"
+        app:riv_border_color="@color/colorBackground"
+        app:riv_corner_radius="15dp"
+        app:riv_border_width="5dp"/>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_linear_layout"
-        style="@style/material_design_horizontal_margin"
+        style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/chore_grid_layout"
@@ -71,7 +72,7 @@
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_grid_layout"
-        style="@style/material_design_horizontal_margin"
+        style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="96dp"
         android:layout_below="@+id/detail_chore_title"
