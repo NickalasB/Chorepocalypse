@@ -86,20 +86,26 @@ public class AddChoreActivity extends AppCompatActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    private void addChore() {
-
+    public void addChore() {
         Chore newChore = new Chore(mChoreName, mChorePoints);
+        getAndSetChoreName(newChore);
+        getAndSetChorePoints(newChore);
         mChoreDatabaseReference.push().setValue(newChore);
-        mChoreName = mChoreNameEditText.getText().toString();
-        mChorePoints = mChorePointsEditText.getText().toString();
-
         putChoreStringExtras();
         Toast.makeText(AddChoreActivity.this, mChoreName + " added to list", Toast.LENGTH_SHORT).show();
-
         //clear text after setting chore
         mChoreNameEditText.setText("");
         mChorePointsEditText.setText("");
+    }
 
+    public void getAndSetChoreName(Chore newChore) {
+        mChoreName = mChoreNameEditText.getText().toString();
+        newChore.setChoreName(mChoreName);
+    }
+
+    public void getAndSetChorePoints(Chore newChore) {
+        mChorePoints = mChorePointsEditText.getText().toString();
+        newChore.setChoreReward(mChorePoints);
     }
 
     private void putChoreStringExtras() {

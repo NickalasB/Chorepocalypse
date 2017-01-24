@@ -9,9 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.ui.adapters.ChoreListAdapter;
+import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import butterknife.BindView;
@@ -22,10 +23,13 @@ public class ChoreListFragment extends Fragment {
 
     @BindView(R.id.chore_list_recycler_view)
     RecyclerView mChoreRecyclerView;
+
+    @BindView(R.id.empty_recyclerview)
+    TextView mEmptyRecyclerView;
+
     private LinearLayoutManager mLinearLayoutManager;
-    private ChoreListAdapter mChoreListAdapter;
-
-
+    private BaseChoreListAdapter mChoreListAdapter;
+    
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -78,13 +82,21 @@ public class ChoreListFragment extends Fragment {
         mChoreRecyclerView.setLayoutManager(mLinearLayoutManager);
         mChoreRecyclerView.setHasFixedSize(true);
 
-        mChoreListAdapter = new ChoreListAdapter(getActivity(), new ChoreListAdapter.ChoreListAdapterOnClickHandler() {
+        mChoreListAdapter = new BaseChoreListAdapter(getActivity(), new BaseChoreListAdapter.ChoreListAdapterInterface() {
             @Override
             public void onClick(ChoreListAdapterViewHolder vh) {
             }
+
+            @Override
+            public void onItemCountChange(int itemCount) {
+                if (itemCount == 0) {
+                    mEmptyRecyclerView.setVisibility(View.VISIBLE);
+                } else {
+                    mEmptyRecyclerView.setVisibility(View.GONE);
+                }
+            }
         });
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
-
         return rootView;
     }
 
@@ -125,5 +137,17 @@ public class ChoreListFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mChoreListAdapter.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mChoreListAdapter.onResume();
     }
 }
