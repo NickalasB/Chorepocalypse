@@ -20,8 +20,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
 
@@ -44,6 +48,10 @@ public class AddChoreActivity extends AppCompatActivity {
     private String mChoreName;
     private String mChorePoints;
     private String mCurrentPhotoPath;
+    private String mCurrentPhotoUrl;
+    private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseStorage mFirebaseStorage;
+    private StorageReference mChorePhotosReference;
 
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
@@ -69,7 +77,7 @@ public class AddChoreActivity extends AppCompatActivity {
     @BindView(R.id.add_chore_photo_picker_button)
     ImageButton mAddChorePhotoButton;
 
-    Intent choreDetailsIntent;
+    Intent mChoreDetailsIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +91,13 @@ public class AddChoreActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_chore);
         ButterKnife.bind(this);
 
-        choreDetailsIntent = new Intent(getApplicationContext(), MainActivity.class);
+        mChoreDetailsIntent = new Intent(getApplicationContext(), MainActivity.class);
 
-        FirebaseDatabase mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
         mChoreDatabaseReference = mFirebaseDatabase.getReference().child("chores");
+        mFirebaseStorage = FirebaseStorage.getInstance();
+        mChorePhotosReference = mFirebaseStorage.getReference().child("chorePhotos");
+
 
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
@@ -94,8 +105,8 @@ public class AddChoreActivity extends AppCompatActivity {
         mAddChorePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dispatchTakePictureIntent();
-//                dispatchChoosePickerIntent();
+//                dispatchTakePictureIntent();
+                dispatchChoosePickerIntent();
             }
         });
 
@@ -117,20 +128,21 @@ public class AddChoreActivity extends AppCompatActivity {
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            Bitmap imageBitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, options);
-            galleryAddPic();
-            setPic();
-            mChorePic.setVisibility(View.VISIBLE);
-            mAddChorePhotoButton.setVisibility(View.GONE);
-            MediaStore.Images.Media.insertImage(getContentResolver(), imageBitmap, null, null);
-
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+            Uri selectedImageUri = data.getData();
+            StorageReference photoRef =
+                    mChorePhotosReference.child((selectedImageUri.getLastPathSegment()));
+            photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Uri downloadChorePicUrl = taskSnapshot.getDownloadUrl();
+                    assert downloadChorePicUrl != null;
+                    mCurrentPhotoUrl = downloadChorePicUrl.toString();
+                }
+            });
+//            mChorePic.setVisibility(View.VISIBLE);
+//            mAddChorePhotoButton.setVisibility(View.GONE);
         }
-
     }
 
     private void dispatchTakePictureIntent() {
@@ -204,9 +216,10 @@ public class AddChoreActivity extends AppCompatActivity {
     }
 
     public void addChore() {
-        Chore newChore = new Chore(mChoreName, mChorePoints);
+        Chore newChore = new Chore(mChoreName, mChorePoints, mCurrentPhotoUrl);
         getAndSetChoreName(newChore);
         getAndSetChorePoints(newChore);
+        getAndSetChorePhotoUrl(newChore);
         mChoreDatabaseReference.push().setValue(newChore);
         putChoreStringExtras();
         Toast.makeText(AddChoreActivity.this, mChoreName + " added to list", Toast.LENGTH_SHORT).show();
@@ -225,15 +238,19 @@ public class AddChoreActivity extends AppCompatActivity {
         newChore.setChoreReward(mChorePoints);
     }
 
+    public void getAndSetChorePhotoUrl(Chore newChore) {
+        newChore.setChorePhotoUrl(mCurrentPhotoUrl);
+    }
+
     private void putChoreStringExtras() {
-        choreDetailsIntent.putExtra("chore_name", mChoreName)
+        mChoreDetailsIntent.putExtra("chore_name", mChoreName)
                 .putExtra("chore_points", mChorePoints);
     }
 
     @Override
     public void onBackPressed() {
         putChoreStringExtras();
-        startActivity(choreDetailsIntent);
+        startActivity(mChoreDetailsIntent);
         super.onBackPressed();
     }
 }
