@@ -1,13 +1,14 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -20,10 +21,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.zonkey.chorepocalypse.R;
@@ -47,11 +50,12 @@ public class AddChoreActivity extends AppCompatActivity {
 
     private String mChoreName;
     private String mChorePoints;
-    private String mCurrentPhotoPath;
-    private String mCurrentPhotoUrl;
+    //    private String mSelectedImageUri;
+    private String mSelectedImageUri;
+
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseStorage mFirebaseStorage;
-    private StorageReference mChorePhotosReference;
+    private StorageReference mStorageReference;
 
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
@@ -80,6 +84,11 @@ public class AddChoreActivity extends AppCompatActivity {
     Intent mChoreDetailsIntent;
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //defining custom default font
@@ -96,17 +105,16 @@ public class AddChoreActivity extends AppCompatActivity {
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mChoreDatabaseReference = mFirebaseDatabase.getReference().child("chores");
         mFirebaseStorage = FirebaseStorage.getInstance();
-        mChorePhotosReference = mFirebaseStorage.getReference().child("chorePhotos");
+        mStorageReference = mFirebaseStorage.getReference();
 
 
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
         mChorePic.setVisibility(View.INVISIBLE);
         mAddChorePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                dispatchTakePictureIntent();
-                dispatchChoosePickerIntent();
+//                launchCameraPhotoPicker();
+                launchImageChooser();
             }
         });
 
@@ -114,38 +122,37 @@ public class AddChoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addChore();
-
             }
         });
     }
 
-    public void dispatchChoosePickerIntent() {
+    public void launchImageChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent,
-                "Complete action using"), RC_PHOTO_PICKER);
+                "Select Picture"), RC_PHOTO_PICKER);
     }
 
+    //handling the image chooser activity result
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedImageUri = data.getData();
-            StorageReference photoRef =
-                    mChorePhotosReference.child((selectedImageUri.getLastPathSegment()));
-            photoRef.putFile(selectedImageUri).addOnSuccessListener(this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Uri downloadChorePicUrl = taskSnapshot.getDownloadUrl();
-                    assert downloadChorePicUrl != null;
-                    mCurrentPhotoUrl = downloadChorePicUrl.toString();
-                }
-            });
-//            mChorePic.setVisibility(View.VISIBLE);
-//            mAddChorePhotoButton.setVisibility(View.GONE);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            mSelectedImageUri = imageUri.toString();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                mChorePic.setImageBitmap(bitmap);
+                mChorePic.setVisibility(View.VISIBLE);
+                mAddChorePhotoButton.setVisibility(View.INVISIBLE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    private void dispatchTakePictureIntent() {
+    private void launchCameraPhotoPicker() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -156,11 +163,20 @@ public class AddChoreActivity extends AppCompatActivity {
                 Toast.makeText(this, "Error creating photo file", Toast.LENGTH_SHORT).show();
             }
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
+                Uri photoUri = FileProvider.getUriForFile(this,
                         "com.zonkey.chorepocalypse.fileprovider",
                         photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                mSelectedImageUri = photoUri.toString();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
+                    mChorePic.setImageBitmap(bitmap);
+                    mChorePic.setVisibility(View.VISIBLE);
+                    mAddChorePhotoButton.setVisibility(View.INVISIBLE);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -174,58 +190,74 @@ public class AddChoreActivity extends AppCompatActivity {
                 ".jpg",         /* suffix */
                 storageDir      /* directory */
         );
-        mCurrentPhotoPath = choreImage.getAbsolutePath();
+        mSelectedImageUri = choreImage.getAbsolutePath();
         return choreImage;
     }
 
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
+        File f = new File(mSelectedImageUri);
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
 
-    private void setPic() {
-        // Get the dimensions of the View
-        int targetW = mChorePic.getWidth();
-        int targetH = mChorePic.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mChorePic.setImageBitmap(bitmap);
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-    }
 
     public void addChore() {
-        Chore newChore = new Chore(mChoreName, mChorePoints, mCurrentPhotoUrl);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri);
+        if (mChoreNameEditText.getText().length() == 0) {
+            Toast.makeText(this, "Gotta give yer chore a name!", Toast.LENGTH_SHORT).show();
+        } else {
+            pushPhotoToFirebase(newChore);
+            setChoreValues(newChore);
+            putChoreStringExtras();
+            mChoreDatabaseReference.push().setValue(newChore);
+        }
+    }
+
+    public void pushPhotoToFirebase(final Chore newChore) {
+        if (mSelectedImageUri != null) {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading Chore");
+            progressDialog.show();
+            StorageReference chorePhotosReference = mStorageReference.child("chore_photos/" + mChoreNameEditText.getText());
+            chorePhotosReference.putFile(Uri.parse(mSelectedImageUri))
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            getAndSetChorePhotoUrl(newChore);
+                            //clear text and views after setting chore
+                            mChoreNameEditText.setText("");
+                            mChorePointsEditText.setText("");
+                            mChorePic.setVisibility(View.INVISIBLE);
+                            mAddChorePhotoButton.setVisibility(View.VISIBLE);
+                            Toast.makeText(AddChoreActivity.this, mChoreName + " added to list!", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            progressDialog.dismiss();
+                            Toast.makeText(AddChoreActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                        }
+                    });
+        } else {
+            Toast.makeText(this, "Oops something went wrong!!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setChoreValues(Chore newChore) {
+        getAndSetChorePhotoUrl(newChore);
         getAndSetChoreName(newChore);
         getAndSetChorePoints(newChore);
-        getAndSetChorePhotoUrl(newChore);
-        mChoreDatabaseReference.push().setValue(newChore);
-        putChoreStringExtras();
-        Toast.makeText(AddChoreActivity.this, mChoreName + " added to list", Toast.LENGTH_SHORT).show();
-        //clear text after setting chore
-        mChoreNameEditText.setText("");
-        mChorePointsEditText.setText("");
     }
 
     public void getAndSetChoreName(Chore newChore) {
@@ -239,7 +271,7 @@ public class AddChoreActivity extends AppCompatActivity {
     }
 
     public void getAndSetChorePhotoUrl(Chore newChore) {
-        newChore.setChorePhotoUrl(mCurrentPhotoUrl);
+        newChore.setChorePhotoUrl(mSelectedImageUri);
     }
 
     private void putChoreStringExtras() {
