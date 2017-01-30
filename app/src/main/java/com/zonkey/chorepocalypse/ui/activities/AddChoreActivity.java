@@ -220,7 +220,7 @@ public class AddChoreActivity extends AppCompatActivity {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading Chore");
             progressDialog.show();
-            StorageReference chorePhotosReference = mStorageReference.child("chore_photos/" + mChoreNameEditText.getText());
+            StorageReference chorePhotosReference = mStorageReference.child("chore_photos/" + Uri.parse(mSelectedImageUri).getLastPathSegment());
             chorePhotosReference.putFile(Uri.parse(mSelectedImageUri))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
