@@ -1,7 +1,9 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -113,8 +115,26 @@ public class AddChoreActivity extends AppCompatActivity {
         mAddChorePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                launchCameraPhotoPicker();
-//                launchImageChooser();
+                CharSequence imageSources[] = new CharSequence[]{
+                        "Camera",
+                        "Gallery"
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddChoreActivity.this);
+                builder.setTitle("Choose image using...");
+                builder.setItems(imageSources, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        switch (i) {
+                            case 0:
+                                launchCameraPhotoPicker();
+                                break;
+                            case 1:
+                                launchImageChooser();
+                                break;
+                        }
+                    }
+                });
+                builder.show();
             }
         });
 
@@ -126,43 +146,35 @@ public class AddChoreActivity extends AppCompatActivity {
         });
     }
 
-
-    //handling the image chooser activity result
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            Uri imageUri = data.getData();
-//            mSelectedImageUri = imageUri.toString();
-//            try {
-//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-//                mChorePic.setImageBitmap(bitmap);
-//                mChorePic.setVisibility(View.VISIBLE);
-//                mAddChorePhotoButton.setVisibility(View.INVISIBLE);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-    //handling the camera chooser activity result
+    //    handling the image chooser activity result
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            mSelectedImageUri = imageUri.toString();
+            try {
+                setChorePhoto(imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
             Uri imageUri = Uri.parse(mSelectedImageUri);
-            Bitmap bitmap;
             try {
-                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-                mChorePic.setImageBitmap(bitmap);
-                mChorePic.setVisibility(View.VISIBLE);
-                mAddChorePhotoButton.setVisibility(View.INVISIBLE);
+                setChorePhoto(imageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    private void setChorePhoto(Uri imageUri) throws IOException {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+        mChorePic.setImageBitmap(bitmap);
+        mChorePic.setVisibility(View.VISIBLE);
+        mAddChorePhotoButton.setVisibility(View.INVISIBLE);
+    }
 
     public void launchImageChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -171,7 +183,6 @@ public class AddChoreActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intent,
                 "Select Picture"), RC_PHOTO_PICKER);
     }
-
 
     private void launchCameraPhotoPicker() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -190,14 +201,6 @@ public class AddChoreActivity extends AppCompatActivity {
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
                 mSelectedImageUri = photoUri.toString();
-                try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
-//                    mChorePic.setImageBitmap(bitmap);
-//                    mChorePic.setVisibility(View.VISIBLE);
-//                    mAddChorePhotoButton.setVisibility(View.INVISIBLE);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         }
     }
@@ -215,15 +218,14 @@ public class AddChoreActivity extends AppCompatActivity {
         return choreImage;
     }
 
-    private void galleryAddPic() {
-        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mSelectedImageUri);
-        Uri contentUri = Uri.fromFile(f);
-        mediaScanIntent.setData(contentUri);
-        this.sendBroadcast(mediaScanIntent);
-    }
-
-
+//    private void galleryAddPic() {
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        File f = new File(mSelectedImageUri);
+//        Uri contentUri = Uri.fromFile(f);
+//        mediaScanIntent.setData(contentUri);
+//        this.sendBroadcast(mediaScanIntent);
+//    }
+    
     public void addChore() {
         final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri);
         if (mChoreNameEditText.getText().length() == 0) {
