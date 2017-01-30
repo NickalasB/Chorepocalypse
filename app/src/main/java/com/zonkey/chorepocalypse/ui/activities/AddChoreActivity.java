@@ -113,8 +113,8 @@ public class AddChoreActivity extends AppCompatActivity {
         mAddChorePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                launchCameraPhotoPicker();
-                launchImageChooser();
+                launchCameraPhotoPicker();
+//                launchImageChooser();
             }
         });
 
@@ -126,23 +126,34 @@ public class AddChoreActivity extends AppCompatActivity {
         });
     }
 
-    public void launchImageChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/jpeg");
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        startActivityForResult(Intent.createChooser(intent,
-                "Select Picture"), RC_PHOTO_PICKER);
-    }
 
     //handling the image chooser activity result
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
+//            Uri imageUri = data.getData();
+//            mSelectedImageUri = imageUri.toString();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+//                mChorePic.setImageBitmap(bitmap);
+//                mChorePic.setVisibility(View.VISIBLE);
+//                mAddChorePhotoButton.setVisibility(View.INVISIBLE);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+
+    //handling the camera chooser activity result
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
-            Uri imageUri = data.getData();
-            mSelectedImageUri = imageUri.toString();
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            Uri imageUri = Uri.parse(mSelectedImageUri);
+            Bitmap bitmap;
             try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                 mChorePic.setImageBitmap(bitmap);
                 mChorePic.setVisibility(View.VISIBLE);
                 mAddChorePhotoButton.setVisibility(View.INVISIBLE);
@@ -151,6 +162,16 @@ public class AddChoreActivity extends AppCompatActivity {
             }
         }
     }
+
+
+    public void launchImageChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/jpeg");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), RC_PHOTO_PICKER);
+    }
+
 
     private void launchCameraPhotoPicker() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -171,9 +192,9 @@ public class AddChoreActivity extends AppCompatActivity {
                 mSelectedImageUri = photoUri.toString();
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), photoUri);
-                    mChorePic.setImageBitmap(bitmap);
-                    mChorePic.setVisibility(View.VISIBLE);
-                    mAddChorePhotoButton.setVisibility(View.INVISIBLE);
+//                    mChorePic.setImageBitmap(bitmap);
+//                    mChorePic.setVisibility(View.VISIBLE);
+//                    mAddChorePhotoButton.setVisibility(View.INVISIBLE);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
