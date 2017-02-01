@@ -217,14 +217,6 @@ public class AddChoreActivity extends AppCompatActivity {
         mSelectedImageUri = choreImage.getAbsolutePath();
         return choreImage;
     }
-
-//    private void galleryAddPic() {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File f = new File(mSelectedImageUri);
-//        Uri contentUri = Uri.fromFile(f);
-//        mediaScanIntent.setData(contentUri);
-//        this.sendBroadcast(mediaScanIntent);
-//    }
     
     public void addChore() {
         final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri);
