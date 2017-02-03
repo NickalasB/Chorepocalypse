@@ -15,5 +15,13 @@
     <string name="add_chore_needs_approval">Needs Approval?</string>
     <string name="add_chore_button_text">Add Chore</string>
     <string name="content_description_photo_picker_button">Photo picker button</string>
+    <string name="pic_picker_camera">Camera</string>
+    <string name="pic_picker_gallery">Gallery</string>
+    <string name="blank_chore_toast">Gotta give yer chore a name!</string>
+    <string name="toast_saving_chore">"Saving "</string>
+    <string name="toast_chore_added">" added to list!"</string>
+    <string name="notification_title">Uploading Chore</string>
+    <string name="notification_text">"Uploaded "</string>
+    <string name="toast_add_chore_error">Oops something went wrong!!</string>
 
 </resources>

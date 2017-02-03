@@ -1,7 +1,7 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +60,9 @@ public class AddChoreActivity extends AppCompatActivity {
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
 
+    private int notificationId = 1;
+
+
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
 
@@ -85,6 +89,10 @@ public class AddChoreActivity extends AppCompatActivity {
 
     Intent mChoreDetailsIntent;
 
+    private NotificationManager mNotifyManager;
+    private NotificationCompat.Builder mBuilder;
+
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -108,16 +116,15 @@ public class AddChoreActivity extends AppCompatActivity {
         mChoreDatabaseReference = mFirebaseDatabase.getReference().child("chores");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
-
-
+        
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         mChorePic.setVisibility(View.INVISIBLE);
         mAddChorePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CharSequence imageSources[] = new CharSequence[]{
-                        "Camera",
-                        "Gallery"
+                        getString(R.string.pic_picker_camera),
+                        getString(R.string.pic_picker_gallery)
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddChoreActivity.this);
                 builder.setTitle("Choose image using...");
@@ -142,6 +149,11 @@ public class AddChoreActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addChore();
+                //clear text and views after setting chore
+                mChoreNameEditText.setText("");
+                mChorePointsEditText.setText("");
+                mChorePic.setVisibility(View.INVISIBLE);
+                mAddChorePhotoButton.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -217,43 +229,38 @@ public class AddChoreActivity extends AppCompatActivity {
         mSelectedImageUri = choreImage.getAbsolutePath();
         return choreImage;
     }
-    
+
     public void addChore() {
         final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri);
         if (mChoreNameEditText.getText().length() == 0) {
-            Toast.makeText(this, "Gotta give yer chore a name!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else {
             pushPhotoToFirebase(newChore);
             setChoreValues(newChore);
             putChoreStringExtras();
+            Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
             mChoreDatabaseReference.push().setValue(newChore);
         }
     }
 
     public void pushPhotoToFirebase(final Chore newChore) {
         if (mSelectedImageUri != null) {
-            final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading Chore");
-            progressDialog.show();
+            mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            mBuilder = new NotificationCompat.Builder(this);
+
             StorageReference chorePhotosReference = mStorageReference.child("chore_photos/" + Uri.parse(mSelectedImageUri).getLastPathSegment());
             chorePhotosReference.putFile(Uri.parse(mSelectedImageUri))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
                             getAndSetChorePhotoUrl(newChore);
-                            //clear text and views after setting chore
-                            mChoreNameEditText.setText("");
-                            mChorePointsEditText.setText("");
-                            mChorePic.setVisibility(View.INVISIBLE);
-                            mAddChorePhotoButton.setVisibility(View.VISIBLE);
-                            Toast.makeText(AddChoreActivity.this, mChoreName + " added to list!", Toast.LENGTH_SHORT).show();
+                            mNotifyManager.cancel(notificationId);
+                            Toast.makeText(AddChoreActivity.this, mChoreName + " " + getString(R.string.toast_chore_added), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            progressDialog.dismiss();
                             Toast.makeText(AddChoreActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     })
@@ -261,11 +268,14 @@ public class AddChoreActivity extends AppCompatActivity {
                         @Override
                         public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                            mBuilder.setContentTitle(getString(R.string.notification_title))
+                                    .setContentText(getString(R.string.notification_text) + ((int) progress) + "%...")
+                                    .setSmallIcon(R.drawable.ic_cloud_upload_24dp);
+                            mNotifyManager.notify(notificationId, mBuilder.build());
                         }
                     });
         } else {
-            Toast.makeText(this, "Oops something went wrong!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_add_chore_error, Toast.LENGTH_SHORT).show();
         }
     }
 
