@@ -38,6 +38,20 @@
         app:riv_border_width="5dp"
         app:riv_corner_radius="15dp" />
 
+    <ImageButton
+        android:id="@+id/add_chore_photo_picker_button"
+        style="@style/MaterialDesignHorizontalMargin"
+        android:layout_width="144dp"
+        android:layout_height="112dp"
+        android:layout_below="@id/add_chore_name"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/content_description_photo_picker_button"
+        android:scaleType="fitXY"
+        android:src="@drawable/image_button_state"
+        app:srcCompat="@drawable/ic_panorama_56dp" />
+
     <android.support.v7.widget.GridLayout
         android:id="@+id/add_chore_grid_layout"
         style="@style/MaterialDesignHorizontalMargin"

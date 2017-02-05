@@ -80,6 +80,8 @@ public class ChoreListFragment extends Fragment {
 
         mLinearLayoutManager = new LinearLayoutManager(getActivity());
         mChoreRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mLinearLayoutManager.setReverseLayout(true);
+        mLinearLayoutManager.setStackFromEnd(true);
         mChoreRecyclerView.setHasFixedSize(true);
 
         mChoreListAdapter = new BaseChoreListAdapter(getActivity(), new BaseChoreListAdapter.ChoreListAdapterInterface() {

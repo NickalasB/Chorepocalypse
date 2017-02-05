@@ -13,7 +13,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.data.Chore;
+import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import java.util.ArrayList;
