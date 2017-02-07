@@ -164,7 +164,8 @@ public class AddChoreActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            mSelectedImageUri = imageUri.toString();
+            StorageReference chorePicRef = mStorageReference.child(imageUri.getLastPathSegment());
+            mSelectedImageUri = chorePicRef.toString();
             try {
                 setChorePhoto(imageUri);
             } catch (IOException e) {

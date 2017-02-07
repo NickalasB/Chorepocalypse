@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +82,10 @@ public class ChoreDetailFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        fetchChoreData();
+    }
+
+    public void fetchChoreData() {
         FirebaseDatabase choreDatabase = FirebaseDatabase.getInstance();
         DatabaseReference choreDatabaseReference = choreDatabase.getReference("chores");
         Query singleChoreQuery = choreDatabaseReference.limitToLast(1);
@@ -92,6 +97,9 @@ public class ChoreDetailFragment extends Fragment {
                         Chore chore = choreSnapshot.getValue(Chore.class);
                         mChoreTitle.setText(chore.getChoreName());
                         mCurrentChorePoints.setText(chore.getChoreReward());
+                        Glide.with(ChoreDetailFragment.this)
+                                .load(chore.getChorePhotoUrl())
+                                .into(mChorePic);
                     }
                 }
             }
