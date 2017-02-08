@@ -53,7 +53,6 @@ public class AddChoreActivity extends AppCompatActivity {
 
     private String mChoreName;
     private String mChorePoints;
-    //    private String mSelectedImageUri;
     private String mSelectedImageUri;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -164,8 +163,8 @@ public class AddChoreActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            StorageReference chorePicRef = mStorageReference.child(imageUri.getLastPathSegment());
-            mSelectedImageUri = chorePicRef.toString();
+            mSelectedImageUri = imageUri.toString();
+            Uri.parse(mSelectedImageUri);
             try {
                 setChorePhoto(imageUri);
             } catch (IOException e) {
