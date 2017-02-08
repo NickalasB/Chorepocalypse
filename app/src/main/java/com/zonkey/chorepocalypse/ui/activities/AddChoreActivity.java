@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
@@ -34,6 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.ui.fragments.TimePickerFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -115,13 +117,19 @@ public class AddChoreActivity extends AppCompatActivity {
         mChoreDatabaseReference = mFirebaseDatabase.getReference().child("chores");
         mFirebaseStorage = FirebaseStorage.getInstance();
         mStorageReference = mFirebaseStorage.getReference();
-        
+
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         mChorePic.setVisibility(View.INVISIBLE);
         setChorePhotoClickListener();
         setAddChoreClickListener();
 
-
+        mChoreDueDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment timePickerFragment = new TimePickerFragment();
+                timePickerFragment.show(getSupportFragmentManager(), "timePicker");
+            }
+        });
     }
 
     private void setAddChoreClickListener() {
