@@ -118,6 +118,27 @@ public class AddChoreActivity extends AppCompatActivity {
         
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         mChorePic.setVisibility(View.INVISIBLE);
+        setChorePhotoClickListener();
+        setAddChoreClickListener();
+
+
+    }
+
+    private void setAddChoreClickListener() {
+        mAddChoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addChore();
+                //clear text and views after setting chore
+                mChoreNameEditText.setText("");
+                mChorePointsEditText.setText("");
+                mChorePic.setVisibility(View.INVISIBLE);
+                mAddChorePhotoButton.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void setChorePhotoClickListener() {
         mAddChorePhotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -141,18 +162,6 @@ public class AddChoreActivity extends AppCompatActivity {
                     }
                 });
                 builder.show();
-            }
-        });
-
-        mAddChoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addChore();
-                //clear text and views after setting chore
-                mChoreNameEditText.setText("");
-                mChorePointsEditText.setText("");
-                mChorePic.setVisibility(View.INVISIBLE);
-                mAddChorePhotoButton.setVisibility(View.VISIBLE);
             }
         });
     }
