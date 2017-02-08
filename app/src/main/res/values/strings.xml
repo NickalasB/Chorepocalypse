@@ -24,4 +24,8 @@
     <string name="notification_text">"Uploaded "</string>
     <string name="toast_add_chore_error">Oops something went wrong!!</string>
 
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
 </resources>

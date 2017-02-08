@@ -12,7 +12,7 @@ import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.zonkey.chorepocalypse.Receivers.AlarmReceiver;
+import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 
 import java.util.Calendar;
 
