@@ -53,7 +53,6 @@ public class AddChoreActivity extends AppCompatActivity {
 
     private String mChoreName;
     private String mChorePoints;
-    //    private String mSelectedImageUri;
     private String mSelectedImageUri;
 
     private FirebaseDatabase mFirebaseDatabase;
@@ -165,6 +164,7 @@ public class AddChoreActivity extends AppCompatActivity {
         if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             mSelectedImageUri = imageUri.toString();
+            Uri.parse(mSelectedImageUri);
             try {
                 setChorePhoto(imageUri);
             } catch (IOException e) {
@@ -237,7 +237,6 @@ public class AddChoreActivity extends AppCompatActivity {
         } else {
             pushPhotoToFirebase(newChore);
             setChoreValues(newChore);
-            putChoreStringExtras();
             Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
             mChoreDatabaseReference.push().setValue(newChore);
         }
@@ -299,14 +298,8 @@ public class AddChoreActivity extends AppCompatActivity {
         newChore.setChorePhotoUrl(mSelectedImageUri);
     }
 
-    private void putChoreStringExtras() {
-        mChoreDetailsIntent.putExtra("chore_name", mChoreName)
-                .putExtra("chore_points", mChorePoints);
-    }
-
     @Override
     public void onBackPressed() {
-        putChoreStringExtras();
         startActivity(mChoreDetailsIntent);
         super.onBackPressed();
     }

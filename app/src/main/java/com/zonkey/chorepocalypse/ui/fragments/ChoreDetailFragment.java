@@ -1,7 +1,6 @@
 package com.zonkey.chorepocalypse.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,8 +12,16 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.models.Chore;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +57,7 @@ public class ChoreDetailFragment extends Fragment {
     @BindView(R.id.detail_chore_checkbox)
     CheckBox mChoreCheckBox;
 
+
     private OnFragmentInteractionListener mListener;
 
     public ChoreDetailFragment() {
@@ -72,25 +80,44 @@ public class ChoreDetailFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        fetchChoreData();
+    }
+
+    public void fetchChoreData() {
+        FirebaseDatabase choreDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference choreDatabaseReference = choreDatabase.getReference("chores");
+        Query singleChoreQuery = choreDatabaseReference.limitToLast(1);
+        singleChoreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
+                        Chore chore = choreSnapshot.getValue(Chore.class);
+                        mChoreTitle.setText(chore.getChoreName());
+                        mCurrentChorePoints.setText(chore.getChoreReward());
+                        Glide.with(ChoreDetailFragment.this)
+                                .load(chore.getChorePhotoUrl())
+                                .into(mChorePic);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chore_detail, container, false);
         ButterKnife.bind(this, rootView);
-        getChoreIntentExtras();
         setUpCheckBox();
         return rootView;
-    }
-
-    private void getChoreIntentExtras() {
-        Intent choreExtrasIntent = getActivity().getIntent();
-        if (choreExtrasIntent.hasExtra("chore_name")) {
-            String choreName = getActivity().getIntent().getStringExtra("chore_name");
-            mChoreTitle.setText(choreName);
-        }
-        if (choreExtrasIntent.hasExtra("chore_points")) {
-            String chorePoints = getActivity().getIntent().getStringExtra("chore_points");
-            mCurrentChorePoints.setText(chorePoints);
-        }
     }
 
     private void setUpCheckBox() {
