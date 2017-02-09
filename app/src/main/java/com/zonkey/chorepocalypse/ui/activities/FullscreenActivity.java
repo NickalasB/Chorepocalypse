@@ -1,24 +1,23 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.services.AlarmService;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class FullscreenActivity extends AppCompatActivity {
-
-
-
+    
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
     private static final int UI_ANIMATION_DELAY = 300;
@@ -63,11 +62,16 @@ public class FullscreenActivity extends AppCompatActivity {
             if (AUTO_HIDE) {
                 delayedHide(AUTO_HIDE_DELAY_MILLIS);
             }
-
-            Toast.makeText(FullscreenActivity.this, "Clicking this should stop ringtone", Toast.LENGTH_SHORT).show();
+            stopAlarm();
             return false;
         }
     };
+
+    public void stopAlarm() {
+        Intent alarmIntent = new Intent(FullscreenActivity.this, AlarmService.class);
+        alarmIntent.setAction(AlarmService.ACTION_DISABLE_ALARM);
+        startService(alarmIntent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class FullscreenActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_content);
+
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {

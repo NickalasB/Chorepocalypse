@@ -41,7 +41,8 @@
             android:name=".receivers.AlarmReceiver"
             android:enabled="true"
             android:exported="true">
-            </receiver>
+
+        </receiver>
 
         <activity
             android:name=".ui.activities.FullscreenActivity"
@@ -50,6 +51,12 @@
             android:theme="@style/FullscreenTheme">
 
         </activity>
+
+        <service
+            android:name=".services.AlarmService"
+            android:exported="false">
+
+        </service>
     </application>
 
 </manifest>
