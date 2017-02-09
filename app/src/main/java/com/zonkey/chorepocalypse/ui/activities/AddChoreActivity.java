@@ -252,24 +252,26 @@ public class AddChoreActivity extends AppCompatActivity {
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else {
-            pushPhotoToFirebase(newChore);
             setChoreValues(newChore);
             Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
-            mChoreDatabaseReference.push().setValue(newChore);
+            DatabaseReference newChoreReference = mChoreDatabaseReference.push();
+            newChoreReference.setValue(newChore);
+            pushPhotoToFirebase(newChore, newChoreReference);
         }
     }
 
-    public void pushPhotoToFirebase(final Chore newChore) {
+    public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
         if (mSelectedImageUri != null) {
             mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             mBuilder = new NotificationCompat.Builder(this);
 
-            StorageReference chorePhotosReference = mStorageReference.child("chore_photos/" + Uri.parse(mSelectedImageUri).getLastPathSegment());
+            StorageReference chorePhotosReference = mStorageReference.child("chore_photos/").child(databaseReference.getKey()).child(Uri.parse(mSelectedImageUri).getLastPathSegment());
             chorePhotosReference.putFile(Uri.parse(mSelectedImageUri))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            getAndSetChorePhotoUrl(newChore);
+                            newChore.setChorePhotoUrl(taskSnapshot.getDownloadUrl().toString());
+                            databaseReference.setValue(newChore);
                             mNotifyManager.cancel(notificationId);
                             Toast.makeText(AddChoreActivity.this, mChoreName + " " + getString(R.string.toast_chore_added), Toast.LENGTH_SHORT).show();
                         }
@@ -296,7 +298,6 @@ public class AddChoreActivity extends AppCompatActivity {
     }
 
     public void setChoreValues(Chore newChore) {
-        getAndSetChorePhotoUrl(newChore);
         getAndSetChoreName(newChore);
         getAndSetChorePoints(newChore);
     }
@@ -309,10 +310,6 @@ public class AddChoreActivity extends AppCompatActivity {
     public void getAndSetChorePoints(Chore newChore) {
         mChorePoints = mChorePointsEditText.getText().toString();
         newChore.setChoreReward(mChorePoints);
-    }
-
-    public void getAndSetChorePhotoUrl(Chore newChore) {
-        newChore.setChorePhotoUrl(mSelectedImageUri);
     }
 
     @Override
