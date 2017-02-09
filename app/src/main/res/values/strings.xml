@@ -27,5 +27,8 @@
     <string name="title_activity_fullscreen">FullscreenActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="date_picker_title">Chore Due Date...</string>
+    <string name="time_picker_title">Chore Due Time...</string>
+    <string name="time_picker_cancel_text">Back to Date</string>
 
 </resources>
