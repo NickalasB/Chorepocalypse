@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,18 +98,32 @@ public class ChoreDetailFragment extends Fragment {
                         Chore chore = choreSnapshot.getValue(Chore.class);
                         mChoreTitle.setText(chore.getChoreName());
                         mCurrentChorePoints.setText(chore.getChoreReward());
-                        Glide.with(ChoreDetailFragment.this)
-                                .load(chore.getChorePhotoUrl())
-                                .into(mChorePic);
+                        loadChorePhoto(chore);
+                        setChoreDueTimeText(chore);
                     }
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+    }
+
+    public void loadChorePhoto(Chore chore) {
+        Glide.with(ChoreDetailFragment.this)
+                .load(chore.getChorePhotoUrl())
+                .into(mChorePic);
+    }
+
+    public void setChoreDueTimeText(Chore chore) {
+        String choreTimeString;
+        String choreDateString;
+        int timeFlag = DateUtils.FORMAT_SHOW_TIME;
+        int dateFlag = DateUtils.FORMAT_SHOW_DATE;
+        choreTimeString = DateUtils.formatDateTime(getActivity(), chore.getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(getActivity(), chore.getChoreTime(), dateFlag);
+        mDueDate.setText("Due: " + choreDateString + " at " + choreTimeString);
     }
 
     @Override

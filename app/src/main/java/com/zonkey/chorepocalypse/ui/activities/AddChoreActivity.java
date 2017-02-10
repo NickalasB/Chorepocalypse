@@ -61,13 +61,13 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private String mChoreName;
     private String mChorePoints;
     private String mSelectedImageUri;
+    private long mChoreTime;
 
     private FirebaseDatabase mFirebaseDatabase;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
 
     private int notificationId = 1;
-    private long mAlarmTime;
 
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
@@ -78,8 +78,8 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     @BindView(R.id.chore_due_date_button)
     Button mChoreDueDateButton;
 
-    @BindView(R.id.chore_status_textview)
-    TextView mChoreStatusTextView;
+    @BindView(R.id.add_chore_due_date_textview)
+    TextView mChoreDueDateTextview;
 
     @BindView(R.id.chore_checkbox)
     CheckBox mChoreCheckbox;
@@ -253,7 +253,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void addChore() {
-        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime);
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else {
@@ -318,6 +318,10 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         newChore.setChoreReward(mChorePoints);
     }
 
+//    public void getAndSetChoreTime(Chore newChore) {
+//        mChoreTime = onDueDateSelected(mChoreTime);
+//        newChore.setChoreReward(mChorePoints);
+//    }
     @Override
     public void onBackPressed() {
         startActivity(mChoreDetailsIntent);
@@ -326,19 +330,24 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     @Override
     public void onDueDateSelected(long timeInMillis) {
-        mAlarmTime = timeInMillis;
+        Chore chore = new Chore();
+        mChoreTime = timeInMillis;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
         int dateFlag = DateUtils.FORMAT_SHOW_DATE;
-        String timeString = DateUtils.formatDateTime(this, mAlarmTime, timeFlag);
-        String dateString = DateUtils.formatDateTime(this, mAlarmTime, dateFlag);
+        String timeString = DateUtils.formatDateTime(this, mChoreTime, timeFlag);
+        String dateString = DateUtils.formatDateTime(this, mChoreTime, dateFlag);
         Toast.makeText(this, "Alarm set for " + dateString + " at " + timeString, Toast.LENGTH_LONG).show();
+        mChoreDueDateTextview.setText(dateString + " at " + timeString);
+        mChoreDueDateButton.setText("Change");
+        chore.setChoreTime(mChoreTime);
+
     }
 
     public void setAlarm() {
         Intent intent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_1, intent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, mAlarmTime, pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
     }
 
 }
