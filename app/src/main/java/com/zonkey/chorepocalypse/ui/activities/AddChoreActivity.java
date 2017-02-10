@@ -1,7 +1,9 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -35,6 +38,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 import com.zonkey.chorepocalypse.ui.fragments.TimePickerFragment;
 
 import java.io.File;
@@ -47,10 +51,11 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class AddChoreActivity extends AppCompatActivity {
+public class AddChoreActivity extends AppCompatActivity implements TimePickerFragment.OnDueDateSelectedListener {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private static final int RC_PHOTO_PICKER = 2;
+    private static final int REQUEST_1 = 1;
     private DatabaseReference mChoreDatabaseReference;
 
     private String mChoreName;
@@ -62,7 +67,7 @@ public class AddChoreActivity extends AppCompatActivity {
     private StorageReference mStorageReference;
 
     private int notificationId = 1;
-
+    private long mAlarmTime;
 
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
@@ -258,6 +263,7 @@ public class AddChoreActivity extends AppCompatActivity {
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore, newChoreReference);
         }
+        setAlarm();
     }
 
     public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
@@ -317,4 +323,22 @@ public class AddChoreActivity extends AppCompatActivity {
         startActivity(mChoreDetailsIntent);
         super.onBackPressed();
     }
+
+    @Override
+    public void onDueDateSelected(long timeInMillis) {
+        mAlarmTime = timeInMillis;
+        int timeFlag = DateUtils.FORMAT_SHOW_TIME;
+        int dateFlag = DateUtils.FORMAT_SHOW_DATE;
+        String timeString = DateUtils.formatDateTime(this, mAlarmTime, timeFlag);
+        String dateString = DateUtils.formatDateTime(this, mAlarmTime, dateFlag);
+        Toast.makeText(this, "Alarm set for " + dateString + " at " + timeString, Toast.LENGTH_LONG).show();
+    }
+
+    public void setAlarm() {
+        Intent intent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_1, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, mAlarmTime, pendingIntent);
+    }
+
 }

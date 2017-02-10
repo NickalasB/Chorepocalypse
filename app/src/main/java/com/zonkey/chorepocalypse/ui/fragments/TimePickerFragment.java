@@ -1,19 +1,13 @@
 package com.zonkey.chorepocalypse.ui.fragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.format.DateUtils;
-import android.widget.Toast;
 
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 
 import java.util.Calendar;
 
@@ -23,12 +17,23 @@ import java.util.Calendar;
 
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener, DatePickerDialog.OnDateSetListener {
 
-    final static int REQUEST_1 = 1;
-
     static String TIME_PICKER;
     static String DATE_PICKER;
     private Calendar mCalendar;
     public long mMillis;
+    public OnDueDateSelectedListener mOnDueDateSelectedListenerCallback;
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnDueDateSelectedListenerCallback = (OnDueDateSelectedListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException((getActivity().toString())
+                    + "must implement OnDueDateSelectedListener");
+        }
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -97,26 +102,18 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         mCalendar.set(year, monthOfYear, dayOfMonth);
         showTimePickerDialog();
     }
+
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
         mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
         mCalendar.set(Calendar.MINUTE, minute);
         mCalendar.set(Calendar.SECOND, second);
-        setAlarm();
+
+        mMillis = mCalendar.getTimeInMillis();
+        mOnDueDateSelectedListenerCallback.onDueDateSelected(mMillis);
     }
 
-    private void setAlarm() {
-        Intent intent = new Intent(getContext(), AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), REQUEST_1, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-        mMillis = mCalendar.getTimeInMillis();
-
-        int timeFlag = DateUtils.FORMAT_SHOW_TIME;
-        int dateFlag = DateUtils.FORMAT_SHOW_DATE;
-        String timeString = DateUtils.formatDateTime(getContext(), mMillis, timeFlag);
-        String dateString = DateUtils.formatDateTime(getContext(), mMillis, dateFlag);
-        Toast.makeText(getActivity(), "Alarm set for " + dateString + " at " + timeString, Toast.LENGTH_LONG).show();
-
-        alarmManager.set(AlarmManager.RTC_WAKEUP, mCalendar.getTimeInMillis(), pendingIntent);
+    public interface OnDueDateSelectedListener {
+        void onDueDateSelected(long timeInMillis);
     }
 }
