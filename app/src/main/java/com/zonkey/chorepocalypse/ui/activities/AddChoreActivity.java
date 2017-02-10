@@ -44,7 +44,9 @@ import com.zonkey.chorepocalypse.ui.fragments.TimePickerFragment;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +58,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     static final int REQUEST_TAKE_PHOTO = 1;
     private static final int RC_PHOTO_PICKER = 2;
     private static final int REQUEST_1 = 1;
-    private DatabaseReference mChoreDatabaseReference;
+    private int mNotificationId = 1;
 
     private String mChoreName;
     private String mChorePoints;
@@ -64,10 +66,13 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private long mChoreTime;
 
     private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mChoreDatabaseReference;
     private FirebaseStorage mFirebaseStorage;
     private StorageReference mStorageReference;
 
-    private int notificationId = 1;
+    private boolean mDueDateSelected;
+    private boolean mChoreNameSelected;
+
 
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
@@ -97,7 +102,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     private NotificationManager mNotifyManager;
     private NotificationCompat.Builder mBuilder;
-
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -143,10 +147,14 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             public void onClick(View view) {
                 addChore();
                 //clear text and views after setting chore
-                mChoreNameEditText.setText("");
-                mChorePointsEditText.setText("");
-                mChorePic.setVisibility(View.INVISIBLE);
-                mAddChorePhotoButton.setVisibility(View.VISIBLE);
+                if (mDueDateSelected && mChoreNameSelected) {
+                    mChoreNameEditText.setText("");
+                    mChorePointsEditText.setText("");
+                    mChoreDueDateButton.setText(getString(R.string.add_chore_due_button_text));
+                    mChoreDueDateTextview.setText(getText(R.string.add_chore_due_date_text));
+                    mChorePic.setVisibility(View.INVISIBLE);
+                    mAddChorePhotoButton.setVisibility(View.VISIBLE);
+                }
             }
         });
     }
@@ -240,7 +248,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     private File createImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File choreImage = File.createTempFile(
@@ -255,15 +263,19 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     public void addChore() {
         final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime);
         if (mChoreNameEditText.getText().length() == 0) {
-            Toast.makeText(this, R.string.blank_chore_toast, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.add_chore_blank_chore_toast, Toast.LENGTH_SHORT).show();
+        } else if (!mDueDateSelected) {
+            Toast.makeText(this, R.string.add_chore_no_due_date, Toast.LENGTH_SHORT).show();
         } else {
+            setAlarm();
             setChoreValues(newChore);
+            mChoreNameSelected = true;
+            mDueDateSelected = true;
             Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
             DatabaseReference newChoreReference = mChoreDatabaseReference.push();
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore, newChoreReference);
         }
-        setAlarm();
     }
 
     public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
@@ -278,7 +290,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             newChore.setChorePhotoUrl(taskSnapshot.getDownloadUrl().toString());
                             databaseReference.setValue(newChore);
-                            mNotifyManager.cancel(notificationId);
+                            mNotifyManager.cancel(mNotificationId);
                             Toast.makeText(AddChoreActivity.this, mChoreName + " " + getString(R.string.toast_chore_added), Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -295,7 +307,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
                             mBuilder.setContentTitle(getString(R.string.notification_title))
                                     .setContentText(getString(R.string.notification_text) + ((int) progress) + "%...")
                                     .setSmallIcon(R.drawable.ic_cloud_upload_24dp);
-                            mNotifyManager.notify(notificationId, mBuilder.build());
+                            mNotifyManager.notify(mNotificationId, mBuilder.build());
                         }
                     });
         } else {
@@ -318,10 +330,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         newChore.setChoreReward(mChorePoints);
     }
 
-//    public void getAndSetChoreTime(Chore newChore) {
-//        mChoreTime = onDueDateSelected(mChoreTime);
-//        newChore.setChoreReward(mChorePoints);
-//    }
     @Override
     public void onBackPressed() {
         startActivity(mChoreDetailsIntent);
@@ -331,16 +339,20 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     @Override
     public void onDueDateSelected(long timeInMillis) {
         Chore chore = new Chore();
+        Calendar currentTime = Calendar.getInstance();
         mChoreTime = timeInMillis;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
         int dateFlag = DateUtils.FORMAT_SHOW_DATE;
         String timeString = DateUtils.formatDateTime(this, mChoreTime, timeFlag);
         String dateString = DateUtils.formatDateTime(this, mChoreTime, dateFlag);
-        Toast.makeText(this, "Alarm set for " + dateString + " at " + timeString, Toast.LENGTH_LONG).show();
-        mChoreDueDateTextview.setText(dateString + " at " + timeString);
-        mChoreDueDateButton.setText("Change");
-        chore.setChoreTime(mChoreTime);
-
+        if (currentTime.getTimeInMillis() >= mChoreTime) {
+            Toast.makeText(this, R.string.add_chore_past_time_text, Toast.LENGTH_SHORT).show();
+        } else {
+            chore.setChoreTime(mChoreTime);
+            mChoreDueDateTextview.setText(dateString + getString(R.string.add_chore_at_string) + timeString);
+            mChoreDueDateButton.setText(R.string.add_chore_change_date_text);
+            mDueDateSelected = true;
+        }
     }
 
     public void setAlarm() {

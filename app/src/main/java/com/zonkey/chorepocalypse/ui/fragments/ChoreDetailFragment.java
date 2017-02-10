@@ -103,6 +103,7 @@ public class ChoreDetailFragment extends Fragment {
                     }
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -111,9 +112,11 @@ public class ChoreDetailFragment extends Fragment {
     }
 
     public void loadChorePhoto(Chore chore) {
-        Glide.with(ChoreDetailFragment.this)
-                .load(chore.getChorePhotoUrl())
-                .into(mChorePic);
+        if (chore.getChorePhotoUrl() != null) {
+            Glide.with(ChoreDetailFragment.this)
+                    .load(chore.getChorePhotoUrl())
+                    .into(mChorePic);
+        }
     }
 
     public void setChoreDueTimeText(Chore chore) {
@@ -123,7 +126,7 @@ public class ChoreDetailFragment extends Fragment {
         int dateFlag = DateUtils.FORMAT_SHOW_DATE;
         choreTimeString = DateUtils.formatDateTime(getActivity(), chore.getChoreTime(), timeFlag);
         choreDateString = DateUtils.formatDateTime(getActivity(), chore.getChoreTime(), dateFlag);
-        mDueDate.setText("Due: " + choreDateString + " at " + choreTimeString);
+        mDueDate.setText(String.format("%s%s%s%s", getString(R.string.detail_due_string), choreDateString, getString(R.string.add_chore_at_string), choreTimeString));
     }
 
     @Override
