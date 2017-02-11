@@ -36,7 +36,8 @@
         app:layout_rowSpan="3"
         app:riv_border_color="@color/colorBackground"
         app:riv_border_width="5dp"
-        app:riv_corner_radius="15dp" />
+        app:riv_corner_radius="15dp"
+        android:visibility="gone"/>
 
     <ImageButton
         android:id="@+id/add_chore_photo_picker_button"
@@ -52,41 +53,42 @@
         android:src="@drawable/image_button_state"
         app:srcCompat="@drawable/ic_panorama_56dp" />
 
-    <android.support.v7.widget.GridLayout
-        android:id="@+id/add_chore_grid_layout"
+    <LinearLayout
+        android:id="@+id/set_deadline_linear_layout"
         style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/add_chore_photo_picker_button"
         android:layout_below="@+id/add_chore_name"
         android:layout_marginTop="9dp"
-        android:layout_toEndOf="@+id/add_chore_pic"
         android:layout_toRightOf="@+id/add_chore_pic"
-        app:columnCount="2">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/chore_due_date_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set deadline"
-            app:layout_columnSpan="2"
-            app:layout_columnWeight="1" />
+            android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
+            android:text="Set deadline" />
 
         <TextView
-            android:id="@+id/chore_status_textview"
+            android:id="@+id/add_chore_due_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_chore_needs_approval" />
+            android:layout_marginStart="6dp"
+            android:layout_marginLeft="6dp"
+            android:text="Chore due by..." />
 
         <CheckBox
             android:id="@+id/chore_checkbox"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_gravity="start"
             android:checked="true"
-            app:layout_columnWeight="1"
-            app:layout_gravity="end" />
-    </android.support.v7.widget.GridLayout>
+            android:text="needs approval"
+            android:textColor="@android:color/secondary_text_dark_nodisable" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/reward_value_linear_layout"

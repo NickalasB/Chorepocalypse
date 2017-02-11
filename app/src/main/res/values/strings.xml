@@ -5,6 +5,7 @@
     <!--Detail Screen-->
     <string name="detail_chore_picture">Chore Picture</string>
     <string name="detail_total_rewards">Total Rewards:</string>
+    <string name="detail_due_string">"Due: "</string>
 
     <!--shared strings-->
     <string name="reward_value_label">Reward Value:</string>
@@ -14,14 +15,37 @@
     <string name="add_chore_points_hint">Add chore points</string>
     <string name="add_chore_needs_approval">Needs Approval?</string>
     <string name="add_chore_button_text">Add Chore</string>
-    <string name="content_description_photo_picker_button">Photo picker button</string>
+    <string name="add_chore_past_time_text">That\'s in the past silly!</string>
+    <string name="add_chore_change_date_text">Change</string>
+    <string name="add_chore_alarm_set_for">"Alarm set for "</string>
+    <string name="add_chore_at_string">" at "</string>
+    <string name="add_chore_due_button_text">Set Deadline</string>
+    <string name="add_chore_due_date_text">Chore due by…</string>
+    <string name="add_chore_no_due_date">Give that sucker a due date!</string>
+    <string name="add_chore_blank_chore_toast">Gotta give yer chore a name!</string>
+
+    <!--pic picker dialog-->
     <string name="pic_picker_camera">Camera</string>
     <string name="pic_picker_gallery">Gallery</string>
-    <string name="blank_chore_toast">Gotta give yer chore a name!</string>
+    <string name="content_description_photo_picker_button">Photo picker button</string>
+
+    <!--Time picker dialog-->
+    <string name="date_picker_title">Chore Due Date…</string>
+    <string name="time_picker_title">Chore Due Time…</string>
+    <string name="time_picker_cancel_text">Back to Date</string>
+
+    <!--Toasts-->
     <string name="toast_saving_chore">"Saving "</string>
     <string name="toast_chore_added">" added to list!"</string>
+    <string name="toast_add_chore_error">No photo added</string>
+
+    <!--Notification strings-->
     <string name="notification_title">Uploading Chore</string>
     <string name="notification_text">"Uploaded "</string>
-    <string name="toast_add_chore_error">Oops something went wrong!!</string>
 
+    <!--full screen alarm activity-->
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="full_screen_got_it_button">OK I get it already!</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="detail_no_chore_points">No points set</string>
 </resources>

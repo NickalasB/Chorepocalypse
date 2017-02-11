@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,11 +97,24 @@ public class ChoreDetailFragment extends Fragment {
                     for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
                         Chore chore = choreSnapshot.getValue(Chore.class);
                         mChoreTitle.setText(chore.getChoreName());
-                        mCurrentChorePoints.setText(chore.getChoreReward());
-                        Glide.with(ChoreDetailFragment.this)
-                                .load(chore.getChorePhotoUrl())
-                                .into(mChorePic);
+                        if (!chore.getChoreReward().equals("")) {
+                            mCurrentChorePoints.setText(chore.getChoreReward());
+                        } else {
+                            mCurrentChorePoints.setText(R.string.detail_no_chore_points);
+                        }
+                        loadChorePhoto(chore);
+                        setChoreDueTimeText(chore);
                     }
+                }
+            }
+
+            void loadChorePhoto(Chore chore) {
+                if (chore.getChorePhotoUrl() != null) {
+                    Glide.with(ChoreDetailFragment.this)
+                            .load(chore.getChorePhotoUrl())
+                            .into(mChorePic);
+                } else {
+                    mChorePic.setImageResource(R.drawable.sink);
                 }
             }
 
@@ -109,6 +123,16 @@ public class ChoreDetailFragment extends Fragment {
 
             }
         });
+    }
+
+    public void setChoreDueTimeText(Chore chore) {
+        String choreTimeString;
+        String choreDateString;
+        int timeFlag = DateUtils.FORMAT_SHOW_TIME;
+        int dateFlag = DateUtils.FORMAT_SHOW_DATE;
+        choreTimeString = DateUtils.formatDateTime(getActivity(), chore.getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(getActivity(), chore.getChoreTime(), dateFlag);
+        mDueDate.setText(String.format("%s%s%s%s", getString(R.string.detail_due_string), choreDateString, getString(R.string.add_chore_at_string), choreTimeString));
     }
 
     @Override
