@@ -36,7 +36,8 @@
         app:layout_rowSpan="3"
         app:riv_border_color="@color/colorBackground"
         app:riv_border_width="5dp"
-        app:riv_corner_radius="15dp" />
+        app:riv_corner_radius="15dp"
+        android:visibility="gone"/>
 
     <ImageButton
         android:id="@+id/add_chore_photo_picker_button"
@@ -67,16 +68,16 @@
             android:id="@+id/chore_due_date_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="4dp"
             android:layout_marginStart="4dp"
+            android:layout_marginLeft="4dp"
             android:text="Set deadline" />
 
         <TextView
             android:id="@+id/add_chore_due_date_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="6dp"
             android:layout_marginStart="6dp"
+            android:layout_marginLeft="6dp"
             android:text="Chore due by..." />
 
         <CheckBox

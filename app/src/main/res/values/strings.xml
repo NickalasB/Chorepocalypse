@@ -45,6 +45,7 @@
 
     <!--full screen alarm activity-->
     <string name="title_activity_fullscreen">FullscreenActivity</string>
-    <string name="dummy_button">Dummy Button</string>
+    <string name="full_screen_got_it_button">OK I get it already!</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="detail_no_chore_points">No points set</string>
 </resources>

@@ -97,7 +97,11 @@ public class ChoreDetailFragment extends Fragment {
                     for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
                         Chore chore = choreSnapshot.getValue(Chore.class);
                         mChoreTitle.setText(chore.getChoreName());
-                        mCurrentChorePoints.setText(chore.getChoreReward());
+                        if (!chore.getChoreReward().equals("")) {
+                            mCurrentChorePoints.setText(chore.getChoreReward());
+                        } else {
+                            mCurrentChorePoints.setText(R.string.detail_no_chore_points);
+                        }
                         loadChorePhoto(chore);
                         setChoreDueTimeText(chore);
                     }
@@ -116,6 +120,8 @@ public class ChoreDetailFragment extends Fragment {
             Glide.with(ChoreDetailFragment.this)
                     .load(chore.getChorePhotoUrl())
                     .into(mChorePic);
+        } else {
+            mChorePic.setImageResource(R.drawable.sink);
         }
     }
 
