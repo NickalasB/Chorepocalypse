@@ -108,21 +108,21 @@ public class ChoreDetailFragment extends Fragment {
                 }
             }
 
+            void loadChorePhoto(Chore chore) {
+                if (chore.getChorePhotoUrl() != null) {
+                    Glide.with(ChoreDetailFragment.this)
+                            .load(chore.getChorePhotoUrl())
+                            .into(mChorePic);
+                } else {
+                    mChorePic.setImageResource(R.drawable.sink);
+                }
+            }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
         });
-    }
-
-    public void loadChorePhoto(Chore chore) {
-        if (chore.getChorePhotoUrl() != null) {
-            Glide.with(ChoreDetailFragment.this)
-                    .load(chore.getChorePhotoUrl())
-                    .into(mChorePic);
-        } else {
-            mChorePic.setImageResource(R.drawable.sink);
-        }
     }
 
     public void setChoreDueTimeText(Chore chore) {
