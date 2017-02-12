@@ -23,6 +23,9 @@ public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implemen
     @BindView(R.id.chore_list_chore_name_textview)
     public TextView mChoreListNameTextView;
 
+    @BindView(R.id.chore_list_due_date_textview)
+    public TextView mChoreListDueDateTextView;
+
     public ChoreListAdapterViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);

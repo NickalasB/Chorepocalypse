@@ -2,6 +2,7 @@ package com.zonkey.chorepocalypse.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,14 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
         choreListAdapterViewHolder
                 .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
+
+        String choreTimeString;
+        String choreDateString;
+        int timeFlag = DateUtils.FORMAT_SHOW_TIME;
+        int dateFlag = DateUtils.FORMAT_SHOW_DATE;
+        choreTimeString = DateUtils.formatDateTime(mLayoutInflater.getContext(), mChoreList.get(position).getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(mLayoutInflater.getContext(), mChoreList.get(position).getChoreTime(), dateFlag);
+        choreListAdapterViewHolder.mChoreListDueDateTextView.setText(String.format("%s%s%s%s", mLayoutInflater.getContext().getString(R.string.detail_due_string), choreDateString, mLayoutInflater.getContext().getString(R.string.add_chore_at_string), choreTimeString));
     }
 
     @Override
