@@ -64,6 +64,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private String mChorePoints;
     private String mSelectedImageUri;
     private long mChoreTime;
+    private int mChoreRequestCode;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mChoreDatabaseReference;
@@ -261,14 +262,14 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void addChore() {
-        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, mChoreRequestCode);
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.add_chore_blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else if (!mDueDateSelected) {
             Toast.makeText(this, R.string.add_chore_no_due_date, Toast.LENGTH_SHORT).show();
         } else {
-            setAlarm();
             setChoreValues(newChore);
+//            setAlarm();
             mChoreNameSelected = true;
             mDueDateSelected = true;
             Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
@@ -276,6 +277,8 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore, newChoreReference);
         }
+        setAlarm();
+
     }
 
     public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
@@ -318,6 +321,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     public void setChoreValues(Chore newChore) {
         getAndSetChoreName(newChore);
         getAndSetChorePoints(newChore);
+        getAndSetChoreRequestCode(newChore);
     }
 
     public void getAndSetChoreName(Chore newChore) {
@@ -328,6 +332,12 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     public void getAndSetChorePoints(Chore newChore) {
         mChorePoints = mChorePointsEditText.getText().toString();
         newChore.setChoreReward(mChorePoints);
+    }
+
+    public void getAndSetChoreRequestCode(Chore newChore) {
+
+        mChoreRequestCode++;
+        newChore.setAlarmRequestCode(mChoreRequestCode);
     }
 
     @Override
@@ -357,9 +367,8 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     public void setAlarm() {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_1, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, mChoreRequestCode, intent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
     }
-
 }
