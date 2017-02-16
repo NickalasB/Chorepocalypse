@@ -34,6 +34,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
+
         void onItemCountChange(int itemCount);
     }
 
@@ -50,7 +51,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         View view = mLayoutInflater.inflate(R.layout.chore_recyclerview_item, viewGroup, false);
         view.setFocusable(true);
         Context context = view.getContext();
-        return new ChoreListAdapterViewHolder(view,context, mChoreList);
+        return new ChoreListAdapterViewHolder(view, context, mChoreList);
     }
 
     @Override
@@ -58,8 +59,12 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
         choreListAdapterViewHolder
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
-        choreListAdapterViewHolder
-                .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
+        if (mChoreList.get(position).getChoreReward().length() == 0) {
+            choreListAdapterViewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
+        } else {
+            choreListAdapterViewHolder
+                    .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
+        }
 
         String choreTimeString;
         String choreDateString;
@@ -120,7 +125,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
         int childCount = (int) dataSnapshot.getChildrenCount();
-        if (childCount == 0){
+        if (childCount == 0) {
             mInterface.onItemCountChange(childCount);
         }
     }
