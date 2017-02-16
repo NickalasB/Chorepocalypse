@@ -11,6 +11,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent alarmServiceIntent = new Intent(context, AlarmService.class);
+        alarmServiceIntent.putExtra("choreKey", intent.getStringExtra("choreKey"));
         alarmServiceIntent.setAction(AlarmService.ACTION_START_ALARM);
         context.startService(alarmServiceIntent);
     }

@@ -38,7 +38,7 @@ public class AlarmService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             if (ACTION_START_ALARM.equals(intent.getAction())){
-                startAlarm();
+                startAlarm(intent);
             } else if (ACTION_DISABLE_ALARM.equals(intent.getAction())) {
                 stopAlarm();
             }
@@ -50,11 +50,12 @@ public class AlarmService extends Service {
         mRingTone.stop();
     }
 
-    private void startAlarm() {
+    private void startAlarm(Intent intent) {
         mRingTone.play();
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(250);
         Intent fullScreenIntent = new Intent(getApplicationContext(), FullscreenActivity.class);
+        fullScreenIntent.putExtra("choreKey", intent.getStringExtra("choreKey"));
         fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(fullScreenIntent);
     }

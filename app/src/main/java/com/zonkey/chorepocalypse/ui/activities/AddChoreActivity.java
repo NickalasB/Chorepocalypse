@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -64,6 +65,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private String mChorePoints;
     private String mSelectedImageUri;
     private long mChoreTime;
+    private String mChoreKey;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mChoreDatabaseReference;
@@ -261,21 +263,24 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void addChore() {
-        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, mChoreKey);
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.add_chore_blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else if (!mDueDateSelected) {
             Toast.makeText(this, R.string.add_chore_no_due_date, Toast.LENGTH_SHORT).show();
         } else {
-            setAlarm();
             setChoreValues(newChore);
             mChoreNameSelected = true;
             mDueDateSelected = true;
             Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
             DatabaseReference newChoreReference = mChoreDatabaseReference.push();
+            newChore.setChoreKey(newChoreReference.getKey());
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore, newChoreReference);
+            newChore.getChoreKey();
         }
+        setAlarm(newChore);
+
     }
 
     public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
@@ -355,11 +360,15 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         }
     }
 
-    public void setAlarm() {
+    public void setAlarm(Chore chore) {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, REQUEST_1, intent, 0);
+        intent.putExtra("choreKey", chore.getChoreKey());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, chore.getChoreKey().hashCode(), intent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
+        }
     }
-
 }
