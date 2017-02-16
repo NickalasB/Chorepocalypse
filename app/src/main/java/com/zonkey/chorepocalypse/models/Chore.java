@@ -11,13 +11,15 @@ public class Chore {
     private String chorePhotoUrl;
     private long choreTime;
     private int alarmRequestCode;
+    private String choreKey;
 
-    public Chore(String cn, String cr, String cpu, long ct, int arq) {
+    public Chore(String cn, String cr, String cpu, long ct, int arq, String ck) {
         choreName = cn;
         choreReward = cr;
         chorePhotoUrl = cpu;
         choreTime = ct;
         alarmRequestCode = arq;
+        choreKey = ck;
     }
 
     public Chore() {
@@ -64,6 +66,13 @@ public class Chore {
         this.alarmRequestCode = alarmRequestCode;
     }
 
+    public String getChoreKey() {
+        return choreKey;
+    }
+
+    public void setChoreKey(String choreKey) {
+        this.choreKey = choreKey;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -78,7 +87,9 @@ public class Chore {
             return false;
         if (choreReward != null ? !choreReward.equals(chore.choreReward) : chore.choreReward != null)
             return false;
-        return chorePhotoUrl != null ? chorePhotoUrl.equals(chore.chorePhotoUrl) : chore.chorePhotoUrl == null;
+        if (chorePhotoUrl != null ? !chorePhotoUrl.equals(chore.chorePhotoUrl) : chore.chorePhotoUrl != null)
+            return false;
+        return choreKey != null ? choreKey.equals(chore.choreKey) : chore.choreKey == null;
 
     }
 
@@ -89,6 +100,8 @@ public class Chore {
         result = 31 * result + (chorePhotoUrl != null ? chorePhotoUrl.hashCode() : 0);
         result = 31 * result + (int) (choreTime ^ (choreTime >>> 32));
         result = 31 * result + alarmRequestCode;
+        result = 31 * result + (choreKey != null ? choreKey.hashCode() : 0);
         return result;
     }
+
 }

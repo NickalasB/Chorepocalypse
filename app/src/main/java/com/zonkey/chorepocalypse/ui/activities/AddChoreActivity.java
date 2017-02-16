@@ -65,6 +65,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private String mSelectedImageUri;
     private long mChoreTime;
     private int mChoreRequestCode;
+    private String mChoreKey;
 
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mChoreDatabaseReference;
@@ -262,7 +263,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void addChore() {
-        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, mChoreRequestCode);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, mChoreRequestCode, mChoreKey);
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.add_chore_blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else if (!mDueDateSelected) {
@@ -274,8 +275,10 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             mDueDateSelected = true;
             Toast.makeText(AddChoreActivity.this, getString(R.string.toast_saving_chore) + " " + mChoreName, Toast.LENGTH_SHORT).show();
             DatabaseReference newChoreReference = mChoreDatabaseReference.push();
+            newChore.setChoreKey(newChoreReference.getKey());
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore, newChoreReference);
+            newChore.getChoreKey();
         }
         setAlarm();
 
@@ -335,7 +338,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void getAndSetChoreRequestCode(Chore newChore) {
-
         mChoreRequestCode++;
         newChore.setAlarmRequestCode(mChoreRequestCode);
     }
