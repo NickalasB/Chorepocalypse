@@ -16,7 +16,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.zonkey.chorepocalypse.R;
@@ -119,7 +118,9 @@ public class FullscreenActivity extends AppCompatActivity {
             }
         });
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
-        fetchChoreData();
+        Intent intent = getIntent();
+
+        fetchChoreData(intent.getStringExtra("choreKey"));
     }
 
     //Wrapping the Activity Context for custom font
@@ -173,21 +174,16 @@ public class FullscreenActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
-    public void fetchChoreData() {
+    public void fetchChoreData(String choreKey) {
         FirebaseDatabase choreDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference choreDatabaseReference = choreDatabase.getReference("chores");
-        Query singleChoreQuery = choreDatabaseReference.limitToLast(1);
-        singleChoreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+        DatabaseReference choreDatabaseReference = choreDatabase.getReference("chores").child(choreKey);
+        choreDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
-                        Chore chore = choreSnapshot.getValue(Chore.class);
-                        mFullScreenChoreTitle.setText(String.format("%s!!", chore.getChoreName()));
-                     {
-                        }
-                        loadChorePhoto(chore);
-                    }
+                    Chore chore = dataSnapshot.getValue(Chore.class);
+                    mFullScreenChoreTitle.setText(String.format("%s!!", chore.getChoreName()));
+                    loadChorePhoto(chore);
                 }
             }
 
