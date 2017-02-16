@@ -12,8 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
-import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -85,8 +85,10 @@ public class ChoreListFragment extends Fragment {
         mChoreRecyclerView.setHasFixedSize(true);
 
         mChoreListAdapter = new BaseChoreListAdapter(getActivity(), new BaseChoreListAdapter.ChoreListAdapterInterface() {
+
             @Override
-            public void onClick(ChoreListAdapterViewHolder vh) {
+            public void onListChoreSelected(Chore chore) {
+
             }
 
             @Override

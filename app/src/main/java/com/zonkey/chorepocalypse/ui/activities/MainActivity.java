@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreDetailFragment;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;
 
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity implements ChoreListFragment.OnFragmentInteractionListener, ChoreDetailFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ChoreListFragment.OnFragmentInteractionListener, ChoreDetailFragment.OnFragmentInteractionListener, BaseChoreListAdapter.ChoreListAdapterInterface {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -82,6 +84,18 @@ public class MainActivity extends AppCompatActivity implements ChoreListFragment
 
     @Override
     public void onFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void onListChoreSelected(Chore chore) {
+        ChoreDetailFragment choreDetailFragment = (ChoreDetailFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.chore_detail_fragment);
+        choreDetailFragment.updateChoreBasedOnListSelection(chore);
+    }
+
+    @Override
+    public void onItemCountChange(int itemCount) {
 
     }
 }

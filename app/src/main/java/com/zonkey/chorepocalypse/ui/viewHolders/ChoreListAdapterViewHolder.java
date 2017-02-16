@@ -1,5 +1,6 @@
 package com.zonkey.chorepocalypse.ui.viewHolders;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -7,6 +8,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,6 +22,10 @@ import butterknife.ButterKnife;
 
 public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+    private final Context context;
+    private final List<Chore> mChoreList;
+    private BaseChoreListAdapter.ChoreListAdapterInterface mchoreListAdapterInterface;
+
     @BindView(R.id.chore_list_points_textview)
     public TextView mChoreListPointsTextView;
 
@@ -26,9 +35,12 @@ public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implemen
     @BindView(R.id.chore_list_due_date_textview)
     public TextView mChoreListDueDateTextView;
 
-    public ChoreListAdapterViewHolder(View itemView) {
+    public ChoreListAdapterViewHolder(View itemView, Context context, List<Chore> mChoreList) {
         super(itemView);
+        this.context = context;
+        this.mChoreList = mChoreList;
         ButterKnife.bind(this, itemView);
+        mchoreListAdapterInterface = (BaseChoreListAdapter.ChoreListAdapterInterface) itemView.getContext();
         itemView.setOnClickListener(this);
     }
 
@@ -36,5 +48,9 @@ public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implemen
     public void onClick(View view) {
         Log.d("RecyclerView", "CLICK!");
         Toast.makeText(view.getContext(), "You clicked # " + getLayoutPosition(), Toast.LENGTH_SHORT).show();
+        getAdapterPosition();
+        mchoreListAdapterInterface.onListChoreSelected(mChoreList.get(getAdapterPosition()));
+
+
     }
 }

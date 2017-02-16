@@ -33,8 +33,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
 
     public interface ChoreListAdapterInterface {
-        void onClick(ChoreListAdapterViewHolder vh);
-
+        void onListChoreSelected(Chore chore);
         void onItemCountChange(int itemCount);
     }
 
@@ -50,7 +49,8 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     public ChoreListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = mLayoutInflater.inflate(R.layout.chore_recyclerview_item, viewGroup, false);
         view.setFocusable(true);
-        return new ChoreListAdapterViewHolder(view);
+        Context context = view.getContext();
+        return new ChoreListAdapterViewHolder(view,context, mChoreList);
     }
 
     @Override

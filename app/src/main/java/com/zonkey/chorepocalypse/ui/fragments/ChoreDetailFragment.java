@@ -81,12 +81,21 @@ public class ChoreDetailFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        fetchChoreData();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_chore_detail, container, false);
+        ButterKnife.bind(this, rootView);
+        setUpCheckBox();
+        return rootView;
     }
 
-    public void fetchChoreData() {
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchLastChoreAddedData();
+    }
+
+    public void fetchLastChoreAddedData() {
         FirebaseDatabase choreDatabase = FirebaseDatabase.getInstance();
         DatabaseReference choreDatabaseReference = choreDatabase.getReference("chores");
         Query singleChoreQuery = choreDatabaseReference.limitToLast(1);
@@ -96,25 +105,8 @@ public class ChoreDetailFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
                         Chore chore = choreSnapshot.getValue(Chore.class);
-                        mChoreTitle.setText(chore.getChoreName());
-                        if (!chore.getChoreReward().equals("")) {
-                            mCurrentChorePoints.setText(chore.getChoreReward());
-                        } else {
-                            mCurrentChorePoints.setText(R.string.detail_no_chore_points);
-                        }
-                        loadChorePhoto(chore);
-                        setChoreDueTimeText(chore);
+                        displayChoreDetails(chore);
                     }
-                }
-            }
-
-            void loadChorePhoto(Chore chore) {
-                if (chore.getChorePhotoUrl() != null) {
-                    Glide.with(ChoreDetailFragment.this)
-                            .load(chore.getChorePhotoUrl())
-                            .into(mChorePic);
-                } else {
-                    mChorePic.setImageResource(R.drawable.sink);
                 }
             }
 
@@ -123,6 +115,27 @@ public class ChoreDetailFragment extends Fragment {
 
             }
         });
+    }
+
+    public void displayChoreDetails(Chore chore) {
+        mChoreTitle.setText(chore.getChoreName());
+        if (!chore.getChoreReward().equals("")) {
+            mCurrentChorePoints.setText(chore.getChoreReward());
+        } else {
+            mCurrentChorePoints.setText(R.string.detail_no_chore_points);
+        }
+        loadChorePhoto(chore);
+        setChoreDueTimeText(chore);
+    }
+
+    public void loadChorePhoto(Chore chore) {
+        if (chore.getChorePhotoUrl() != null) {
+            Glide.with(ChoreDetailFragment.this)
+                    .load(chore.getChorePhotoUrl())
+                    .into(mChorePic);
+        } else {
+            mChorePic.setImageResource(R.drawable.sink);
+        }
     }
 
     public void setChoreDueTimeText(Chore chore) {
@@ -135,13 +148,8 @@ public class ChoreDetailFragment extends Fragment {
         mDueDate.setText(String.format("%s%s%s%s", getString(R.string.detail_due_string), choreDateString, getString(R.string.add_chore_at_string), choreTimeString));
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_chore_detail, container, false);
-        ButterKnife.bind(this, rootView);
-        setUpCheckBox();
-        return rootView;
+    public void updateChoreBasedOnListSelection(Chore chore) {
+        displayChoreDetails(chore);
     }
 
     private void setUpCheckBox() {
