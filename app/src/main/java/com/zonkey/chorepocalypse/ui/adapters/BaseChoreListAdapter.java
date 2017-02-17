@@ -60,6 +60,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         choreListAdapterViewHolder
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
         if (mChoreList.get(position).getChoreReward().length() == 0) {
+        if (mChoreList.get(position).getChoreReward().equals("0")) {
             choreListAdapterViewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
         } else {
             choreListAdapterViewHolder
