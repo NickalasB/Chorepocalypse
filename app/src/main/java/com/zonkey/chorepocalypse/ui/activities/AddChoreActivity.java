@@ -278,9 +278,8 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore, newChoreReference);
             newChore.getChoreKey();
+            setAlarm(newChore);
         }
-        setAlarm(newChore);
-
     }
 
     public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
