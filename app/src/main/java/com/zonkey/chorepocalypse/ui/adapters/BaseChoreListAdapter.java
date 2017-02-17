@@ -3,6 +3,7 @@ package com.zonkey.chorepocalypse.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,8 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     private LayoutInflater mLayoutInflater;
     private DatabaseReference mChoreReference;
     private List<Chore> mChoreList;
-
+    private ArrayList<String> mAllPointsList;
+    private int pointsSum = 0;
 
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
@@ -44,6 +46,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         mLayoutInflater = LayoutInflater.from(context);
         mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
         mChoreList = new ArrayList<>();
+        mAllPointsList = new ArrayList<>();
     }
 
     @Override
@@ -93,27 +96,22 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Chore chore = dataSnapshot.getValue(Chore.class);
-        ArrayList<String> allPointsList = new ArrayList<>();
-
         int index = mChoreList.size();
+
         if (!mChoreList.contains(chore)) {
             mChoreList.add(chore);
             notifyItemInserted(index);
             mInterface.onItemCountChange(getItemCount());
-            allPointsList.add((dataSnapshot.getValue(Chore.class)).getChoreReward());
-            System.out.println(allPointsList);
-            int totalPoints = getListTotal(allPointsList);
+            mAllPointsList.add(chore.getChoreReward());
+            int totalPoints = getListTotal(chore);
+            Log.v("TOTAL POINTS = ", String.valueOf(totalPoints));
         }
-
     }
 
-    private int getListTotal(ArrayList<String> allPointsList){
-        int sum = 0;
-        for (String s : allPointsList ){
-            int i = Integer.parseInt(s);
-            sum += i;
-        }
-        return sum;
+    private int getListTotal(Chore chore) {
+        int i = Integer.parseInt(chore.getChoreReward());
+        pointsSum += i;
+        return pointsSum;
     }
 
     @Override
@@ -148,5 +146,4 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     public void onCancelled(DatabaseError databaseError) {
 
     }
-
 }
