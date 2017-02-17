@@ -50,7 +50,5 @@ public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implemen
         Toast.makeText(view.getContext(), "You clicked # " + getLayoutPosition(), Toast.LENGTH_SHORT).show();
         getAdapterPosition();
         mchoreListAdapterInterface.onListChoreSelected(mChoreList.get(getAdapterPosition()));
-
-
     }
 }
