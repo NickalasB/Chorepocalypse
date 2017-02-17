@@ -59,7 +59,6 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
         choreListAdapterViewHolder
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
-        if (mChoreList.get(position).getChoreReward().length() == 0) {
         if (mChoreList.get(position).getChoreReward().equals("0")) {
             choreListAdapterViewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
         } else {
@@ -89,18 +88,32 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     public void onResume() {
         mChoreReference.addChildEventListener(this);
         mChoreReference.addListenerForSingleValueEvent(this);
-
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Chore chore = dataSnapshot.getValue(Chore.class);
+        ArrayList<String> allPointsList = new ArrayList<>();
+
         int index = mChoreList.size();
         if (!mChoreList.contains(chore)) {
             mChoreList.add(chore);
             notifyItemInserted(index);
             mInterface.onItemCountChange(getItemCount());
+            allPointsList.add((dataSnapshot.getValue(Chore.class)).getChoreReward());
+            System.out.println(allPointsList);
+            int totalPoints = getListTotal(allPointsList);
         }
+
+    }
+
+    private int getListTotal(ArrayList<String> allPointsList){
+        int sum = 0;
+        for (String s : allPointsList ){
+            int i = Integer.parseInt(s);
+            sum += i;
+        }
+        return sum;
     }
 
     @Override
