@@ -2,7 +2,6 @@ package com.zonkey.chorepocalypse.ui.activities;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -13,11 +12,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.NotificationCompat;
 import android.text.InputType;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -29,17 +26,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
+import com.zonkey.chorepocalypse.services.PhotoUploadIntentService;
 import com.zonkey.chorepocalypse.ui.fragments.TimePickerFragment;
 
 import java.io.File;
@@ -58,19 +50,13 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private static final int RC_PHOTO_PICKER = 2;
-    private static final int REQUEST_1 = 1;
-    private int mNotificationId = 1;
 
     private String mChoreName;
     private String mChorePoints;
     private String mSelectedImageUri;
     private long mChoreTime;
-    private String mChoreKey;
 
-    private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mChoreDatabaseReference;
-    private FirebaseStorage mFirebaseStorage;
-    private StorageReference mStorageReference;
 
     private boolean mDueDateSelected;
     private boolean mChoreNameSelected;
@@ -102,9 +88,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     Intent mChoreDetailsIntent;
 
-    private NotificationManager mNotifyManager;
-    private NotificationCompat.Builder mBuilder;
-
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
@@ -124,10 +107,8 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
         mChoreDetailsIntent = new Intent(getApplicationContext(), MainActivity.class);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mChoreDatabaseReference = mFirebaseDatabase.getReference().child("chores");
-        mFirebaseStorage = FirebaseStorage.getInstance();
-        mStorageReference = mFirebaseStorage.getReference();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        mChoreDatabaseReference = firebaseDatabase.getReference().child("chores");
 
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         mChorePic.setVisibility(View.INVISIBLE);
@@ -263,7 +244,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void addChore() {
-        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, mChoreKey);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, null);
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.add_chore_blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else if (!mDueDateSelected) {
@@ -276,47 +257,13 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             DatabaseReference newChoreReference = mChoreDatabaseReference.push();
             newChore.setChoreKey(newChoreReference.getKey());
             newChoreReference.setValue(newChore);
-            pushPhotoToFirebase(newChore, newChoreReference);
-            newChore.getChoreKey();
+            pushPhotoToFirebase(newChore);
             setAlarm(newChore);
         }
     }
 
-    public void pushPhotoToFirebase(final Chore newChore, final DatabaseReference databaseReference) {
-        if (mSelectedImageUri != null) {
-            mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            mBuilder = new NotificationCompat.Builder(this);
-
-            StorageReference chorePhotosReference = mStorageReference.child("chore_photos/").child(databaseReference.getKey()).child(Uri.parse(mSelectedImageUri).getLastPathSegment());
-            chorePhotosReference.putFile(Uri.parse(mSelectedImageUri))
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            newChore.setChorePhotoUrl(taskSnapshot.getDownloadUrl().toString());
-                            databaseReference.setValue(newChore);
-                            mNotifyManager.cancel(mNotificationId);
-                            Toast.makeText(AddChoreActivity.this, mChoreName + " " + getString(R.string.toast_chore_added), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Toast.makeText(AddChoreActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            mBuilder.setContentTitle(getString(R.string.notification_title))
-                                    .setContentText(getString(R.string.notification_text) + ((int) progress) + "%...")
-                                    .setSmallIcon(R.drawable.ic_cloud_upload_24dp);
-                            mNotifyManager.notify(mNotificationId, mBuilder.build());
-                        }
-                    });
-        } else {
-            Toast.makeText(this, R.string.toast_add_chore_error, Toast.LENGTH_SHORT).show();
-        }
+    public void pushPhotoToFirebase(final Chore newChore) {
+        PhotoUploadIntentService.uploadPhoto(this, newChore, mSelectedImageUri);
     }
 
     public void setChoreValues(Chore newChore) {
@@ -336,13 +283,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         }
         newChore.setChoreReward(mChorePoints);
     }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(mChoreDetailsIntent);
-        super.onBackPressed();
-    }
-
+    
     @Override
     public void onDueDateSelected(long timeInMillis) {
         Chore chore = new Chore();

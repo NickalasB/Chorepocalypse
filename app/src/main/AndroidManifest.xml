@@ -40,23 +40,20 @@
         <receiver
             android:name=".receivers.AlarmReceiver"
             android:enabled="true"
-            android:exported="true">
-
-        </receiver>
+            android:exported="true"></receiver>
 
         <activity
             android:name=".ui.activities.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme">
-
-        </activity>
+            android:theme="@style/FullscreenTheme"></activity>
 
         <service
             android:name=".services.AlarmService"
-            android:exported="false">
-
-        </service>
+            android:exported="false"></service>
+        <service
+            android:name=".services.PhotoUploadIntentService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

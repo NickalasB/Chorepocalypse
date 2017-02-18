@@ -1,10 +1,13 @@
 package com.zonkey.chorepocalypse.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by nickbradshaw on 1/18/17.
  */
 
-public class Chore {
+public class Chore implements Parcelable {
 
     private String choreName;
     private String choreReward;
@@ -92,4 +95,37 @@ public class Chore {
         return result;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.choreName);
+        dest.writeString(this.choreReward);
+        dest.writeString(this.chorePhotoUrl);
+        dest.writeLong(this.choreTime);
+        dest.writeString(this.choreKey);
+    }
+
+    protected Chore(Parcel in) {
+        this.choreName = in.readString();
+        this.choreReward = in.readString();
+        this.chorePhotoUrl = in.readString();
+        this.choreTime = in.readLong();
+        this.choreKey = in.readString();
+    }
+
+    public static final Parcelable.Creator<Chore> CREATOR = new Parcelable.Creator<Chore>() {
+        @Override
+        public Chore createFromParcel(Parcel source) {
+            return new Chore(source);
+        }
+
+        @Override
+        public Chore[] newArray(int size) {
+            return new Chore[size];
+        }
+    };
 }

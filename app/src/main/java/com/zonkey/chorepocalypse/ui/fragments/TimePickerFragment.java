@@ -111,6 +111,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
 
         mMillis = mCalendar.getTimeInMillis();
         mOnDueDateSelectedListenerCallback.onDueDateSelected(mMillis);
+        this.dismiss();
     }
 
     public interface OnDueDateSelectedListener {
