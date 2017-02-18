@@ -8,12 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
@@ -25,27 +19,35 @@ import java.util.List;
  * Created by nickbradshaw on 1/14/17.
  */
 
-public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ChildEventListener, ValueEventListener {
+public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> {
 
     private ChoreListAdapterInterface mInterface;
-    private DatabaseReference mChoreReference;
     private List<Chore> mChoreList;
-    private ArrayList<String> mAllPointsList;
-    private int totalPoints;
 
+    public void setData(List<Chore> data) {
+        mChoreList.clear();
+        if (data != null) {
+            mChoreList.addAll(data);
+        }
+        mInterface.onItemCountChange(getItemCount());
+        int totalPoints = getListTotal();
+        mInterface.onChorePointsTotaled(totalPoints);
+        Log.v("TOTAL POINTS = ", String.valueOf(totalPoints));
+        notifyDataSetChanged();
+    }
 
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
+
         void onChorePointsTotaled(int totalChorePoints);
+
         void onItemCountChange(int itemCount);
     }
 
     public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface) {
         super();
         mInterface = adapterInterface;
-        mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
         mChoreList = new ArrayList<>();
-        mAllPointsList = new ArrayList<>();
     }
 
     @Override
@@ -82,74 +84,12 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         return mChoreList.size();
     }
 
-    public void onPause() {
-        mChoreReference.removeEventListener((ChildEventListener) this);
-
-    }
-
-    public void onResume() {
-        mChoreReference.addChildEventListener(this);
-        mChoreReference.addListenerForSingleValueEvent(this);
-    }
-
-    @Override
-    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-        Chore chore = dataSnapshot.getValue(Chore.class);
-        int index = mChoreList.size();
-
-        if (!mChoreList.contains(chore)) {
-            mChoreList.add(chore);
-            notifyItemInserted(index);
-            mInterface.onItemCountChange(getItemCount());
-            mAllPointsList.add(chore.getChoreReward());
-            totalPoints = getListTotal();
-            mInterface.onChorePointsTotaled(getListTotal());
-            Log.v("TOTAL POINTS = ", String.valueOf(totalPoints));
-        }
-    }
-
-
-    public int getListTotal(){
+    private int getListTotal() {
         int sum = 0;
-        for (String s : mAllPointsList){
-            int i = Integer.parseInt(s);
+        for (Chore chore : mChoreList) {
+            int i = Integer.parseInt(chore.getChoreReward());
             sum += i;
         }
         return sum;
-
-    }
-
-    @Override
-    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onChildRemoved(DataSnapshot dataSnapshot) {
-        Chore chore = dataSnapshot.getValue(Chore.class);
-        int index = mChoreList.indexOf(chore);
-        if (mChoreList.remove(chore)) {
-            notifyItemRemoved(index);
-            mInterface.onItemCountChange(getItemCount());
-            mInterface.onChorePointsTotaled(getListTotal());
-        }
-    }
-
-    @Override
-    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-    }
-
-    @Override
-    public void onDataChange(DataSnapshot dataSnapshot) {
-        int childCount = (int) dataSnapshot.getChildrenCount();
-        if (childCount == 0) {
-            mInterface.onItemCountChange(childCount);
-        }
-    }
-
-    @Override
-    public void onCancelled(DatabaseError databaseError) {
-
     }
 }

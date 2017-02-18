@@ -1,7 +1,5 @@
 package com.zonkey.chorepocalypse.ui.fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -27,14 +25,6 @@ import com.zonkey.chorepocalypse.models.Chore;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ChoreDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ChoreDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ChoreDetailFragment extends Fragment {
 
     @BindView(R.id.detail_chore_title)
@@ -58,25 +48,8 @@ public class ChoreDetailFragment extends Fragment {
     @BindView(R.id.detail_chore_checkbox)
     CheckBox mChoreCheckBox;
 
-    private OnFragmentInteractionListener mListener;
-
     public ChoreDetailFragment() {
         // Required empty public constructor
-    }
-
-    public static ChoreDetailFragment newInstance() {
-        ChoreDetailFragment fragment = new ChoreDetailFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        Bundle args = getArguments();
-        super.onCreate(savedInstanceState);
-        if (args != null) {
-        }
     }
 
     @Override
@@ -162,33 +135,5 @@ public class ChoreDetailFragment extends Fragment {
                 Toast.makeText(getActivity(), "Check works", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 }

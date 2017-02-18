@@ -2,7 +2,6 @@ package com.zonkey.chorepocalypse.ui.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -23,7 +22,7 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class MainActivity extends AppCompatActivity implements ChoreListFragment.OnFragmentInteractionListener, ChoreDetailFragment.OnFragmentInteractionListener, BaseChoreListAdapter.ChoreListAdapterInterface {
+public class MainActivity extends AppCompatActivity implements BaseChoreListAdapter.ChoreListAdapterInterface {
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -80,11 +79,6 @@ public class MainActivity extends AppCompatActivity implements ChoreListFragment
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-
     }
 
     @Override
