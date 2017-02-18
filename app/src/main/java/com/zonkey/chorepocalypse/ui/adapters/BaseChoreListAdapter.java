@@ -32,11 +32,12 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     private DatabaseReference mChoreReference;
     private List<Chore> mChoreList;
     private ArrayList<String> mAllPointsList;
-    private int pointsSum = 0;
+    private int totalPoints;
+
 
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
-
+        void onChorePointsTotaled(int totalChorePoints);
         void onItemCountChange(int itemCount);
     }
 
@@ -103,15 +104,21 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             notifyItemInserted(index);
             mInterface.onItemCountChange(getItemCount());
             mAllPointsList.add(chore.getChoreReward());
-            int totalPoints = getListTotal(chore);
+            totalPoints = getListTotal();
+            mInterface.onChorePointsTotaled(getListTotal());
             Log.v("TOTAL POINTS = ", String.valueOf(totalPoints));
         }
     }
 
-    private int getListTotal(Chore chore) {
-        int i = Integer.parseInt(chore.getChoreReward());
-        pointsSum += i;
-        return pointsSum;
+
+    private int getListTotal(){
+        int sum = 0;
+        for (String s : mAllPointsList){
+            int i = Integer.parseInt(s);
+            sum += i;
+        }
+        return sum;
+
     }
 
     @Override
@@ -126,6 +133,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         if (mChoreList.remove(chore)) {
             notifyItemRemoved(index);
             mInterface.onItemCountChange(getItemCount());
+            mInterface.onChorePointsTotaled(getListTotal());
         }
     }
 

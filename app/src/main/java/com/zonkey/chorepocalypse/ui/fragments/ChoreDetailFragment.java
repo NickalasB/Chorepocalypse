@@ -23,6 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,7 +36,7 @@ import butterknife.ButterKnife;
  * Use the {@link ChoreDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ChoreDetailFragment extends Fragment {
+public class ChoreDetailFragment extends Fragment implements BaseChoreListAdapter.ChoreListAdapterInterface{
 
     @BindView(R.id.detail_chore_title)
     TextView mChoreTitle;
@@ -47,7 +48,7 @@ public class ChoreDetailFragment extends Fragment {
     TextView mCurrentChorePoints;
 
     @BindView(R.id.detail_total_chore_points)
-    TextView mTotalPoints;
+    TextView mTotalPointsTextView;
 
     @BindView(R.id.detail_chore_due_date)
     TextView mDueDate;
@@ -58,6 +59,7 @@ public class ChoreDetailFragment extends Fragment {
     @BindView(R.id.detail_chore_checkbox)
     CheckBox mChoreCheckBox;
 
+    private int mTotalPoints;
 
     private OnFragmentInteractionListener mListener;
 
@@ -183,6 +185,22 @@ public class ChoreDetailFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onListChoreSelected(Chore chore) {
+
+    }
+
+    @Override
+    public void onChorePointsTotaled(int totalChorePoints) {
+        mTotalPointsTextView.setText(totalChorePoints);
+
+    }
+
+    @Override
+    public void onItemCountChange(int itemCount) {
+
     }
 
     public interface OnFragmentInteractionListener {

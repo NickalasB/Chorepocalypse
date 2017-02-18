@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
@@ -92,6 +93,13 @@ public class MainActivity extends AppCompatActivity implements ChoreListFragment
         ChoreDetailFragment choreDetailFragment = (ChoreDetailFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.chore_detail_fragment);
         choreDetailFragment.updateChoreBasedOnListSelection(chore);
+    }
+
+    @Override
+    public void onChorePointsTotaled(int totalChorePoints) {
+        Toast.makeText(this, "points totaled is " + totalChorePoints, Toast.LENGTH_SHORT).show();
+
+
     }
 
     @Override

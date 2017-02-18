@@ -92,6 +92,11 @@ public class ChoreListFragment extends Fragment {
             }
 
             @Override
+            public void onChorePointsTotaled(int totalChorePoints) {
+
+            }
+
+            @Override
             public void onItemCountChange(int itemCount) {
                 if (itemCount == 0) {
                     mEmptyRecyclerView.setVisibility(View.VISIBLE);
