@@ -47,7 +47,7 @@ public class ChoreDetailFragment extends Fragment {
     TextView mCurrentChorePoints;
 
     @BindView(R.id.detail_total_chore_points)
-    TextView mTotalPoints;
+    TextView mTotalPointsTextView;
 
     @BindView(R.id.detail_chore_due_date)
     TextView mDueDate;
@@ -57,7 +57,6 @@ public class ChoreDetailFragment extends Fragment {
 
     @BindView(R.id.detail_chore_checkbox)
     CheckBox mChoreCheckBox;
-
 
     private OnFragmentInteractionListener mListener;
 
@@ -152,12 +151,15 @@ public class ChoreDetailFragment extends Fragment {
         displayChoreDetails(chore);
     }
 
+    public void onChorePointsTotaled(int totalChorePoints) {
+        mTotalPointsTextView.setText(String.valueOf(totalChorePoints));
+    }
+
     private void setUpCheckBox() {
         mChoreCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 Toast.makeText(getActivity(), "Check works", Toast.LENGTH_SHORT).show();
-
             }
         });
     }

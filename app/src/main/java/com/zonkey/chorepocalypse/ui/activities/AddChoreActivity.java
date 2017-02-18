@@ -331,6 +331,9 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     public void getAndSetChorePoints(Chore newChore) {
         mChorePoints = mChorePointsEditText.getText().toString();
+        if (mChorePoints.length() == 0){
+            mChorePoints = String.valueOf(0);
+        }
         newChore.setChoreReward(mChorePoints);
     }
 

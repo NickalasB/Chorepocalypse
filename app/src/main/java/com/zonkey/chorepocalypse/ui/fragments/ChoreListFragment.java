@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zonkey.chorepocalypse.R;
-import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.ui.activities.MainActivity;
 import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 
 import butterknife.BindView;
@@ -29,7 +29,7 @@ public class ChoreListFragment extends Fragment {
 
     private LinearLayoutManager mLinearLayoutManager;
     private BaseChoreListAdapter mChoreListAdapter;
-    
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -84,24 +84,18 @@ public class ChoreListFragment extends Fragment {
         mLinearLayoutManager.setStackFromEnd(true);
         mChoreRecyclerView.setHasFixedSize(true);
 
-        mChoreListAdapter = new BaseChoreListAdapter(getActivity(), new BaseChoreListAdapter.ChoreListAdapterInterface() {
+        mChoreListAdapter = new BaseChoreListAdapter((MainActivity)getActivity());
 
-            @Override
-            public void onListChoreSelected(Chore chore) {
-
-            }
-
-            @Override
-            public void onItemCountChange(int itemCount) {
-                if (itemCount == 0) {
-                    mEmptyRecyclerView.setVisibility(View.VISIBLE);
-                } else {
-                    mEmptyRecyclerView.setVisibility(View.GONE);
-                }
-            }
-        });
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
         return rootView;
+    }
+
+    public void onItemCountChange(int itemCount) {
+        if (itemCount == 0) {
+            mEmptyRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

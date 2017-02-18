@@ -95,7 +95,17 @@ public class MainActivity extends AppCompatActivity implements ChoreListFragment
     }
 
     @Override
+    public void onChorePointsTotaled(int totalChorePoints) {
+        ChoreDetailFragment choreDetailFragment = (ChoreDetailFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.chore_detail_fragment);
+        choreDetailFragment.onChorePointsTotaled(totalChorePoints);
+    }
+
+    @Override
     public void onItemCountChange(int itemCount) {
+        ChoreListFragment choreListFragment = (ChoreListFragment)getSupportFragmentManager()
+                .findFragmentById(R.id.chore_list_fragment);
+        choreListFragment.onItemCountChange(itemCount);
 
     }
 }

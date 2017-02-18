@@ -3,6 +3,7 @@ package com.zonkey.chorepocalypse.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,42 +28,43 @@ import java.util.List;
 public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ChildEventListener, ValueEventListener {
 
     private ChoreListAdapterInterface mInterface;
-    private LayoutInflater mLayoutInflater;
     private DatabaseReference mChoreReference;
     private List<Chore> mChoreList;
+    private ArrayList<String> mAllPointsList;
+    private int totalPoints;
 
 
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
-
+        void onChorePointsTotaled(int totalChorePoints);
         void onItemCountChange(int itemCount);
     }
 
-    public BaseChoreListAdapter(Context context, ChoreListAdapterInterface adapterInterface) {
+    public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface) {
         super();
         mInterface = adapterInterface;
-        mLayoutInflater = LayoutInflater.from(context);
         mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
         mChoreList = new ArrayList<>();
+        mAllPointsList = new ArrayList<>();
     }
 
     @Override
     public ChoreListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.chore_recyclerview_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chore_recyclerview_item, viewGroup, false);
         view.setFocusable(true);
         Context context = view.getContext();
         return new ChoreListAdapterViewHolder(view, context, mChoreList);
     }
 
     @Override
-    public void onBindViewHolder(ChoreListAdapterViewHolder choreListAdapterViewHolder, int position) {
+    public void onBindViewHolder(ChoreListAdapterViewHolder viewHolder, int position) {
 
-        choreListAdapterViewHolder
+        viewHolder
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
-        if (mChoreList.get(position).getChoreReward().length() == 0) {
-            choreListAdapterViewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
+        if (mChoreList.get(position).getChoreReward().equals("0")) {
+            viewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
         } else {
-            choreListAdapterViewHolder
+            viewHolder
                     .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
         }
 
@@ -70,9 +72,9 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         String choreDateString;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
         int dateFlag = DateUtils.FORMAT_SHOW_DATE;
-        choreTimeString = DateUtils.formatDateTime(mLayoutInflater.getContext(), mChoreList.get(position).getChoreTime(), timeFlag);
-        choreDateString = DateUtils.formatDateTime(mLayoutInflater.getContext(), mChoreList.get(position).getChoreTime(), dateFlag);
-        choreListAdapterViewHolder.mChoreListDueDateTextView.setText(String.format("%s%s%s%s", mLayoutInflater.getContext().getString(R.string.detail_due_string), choreDateString, mLayoutInflater.getContext().getString(R.string.add_chore_at_string), choreTimeString));
+        choreTimeString = DateUtils.formatDateTime(viewHolder.itemView.getContext(), mChoreList.get(position).getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(viewHolder.itemView.getContext(), mChoreList.get(position).getChoreTime(), dateFlag);
+        viewHolder.mChoreListDueDateTextView.setText(String.format("%s%s%s%s", viewHolder.itemView.getContext().getString(R.string.detail_due_string), choreDateString, viewHolder.itemView.getContext().getString(R.string.add_chore_at_string), choreTimeString));
     }
 
     @Override
@@ -88,18 +90,33 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     public void onResume() {
         mChoreReference.addChildEventListener(this);
         mChoreReference.addListenerForSingleValueEvent(this);
-
     }
 
     @Override
     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
         Chore chore = dataSnapshot.getValue(Chore.class);
         int index = mChoreList.size();
+
         if (!mChoreList.contains(chore)) {
             mChoreList.add(chore);
             notifyItemInserted(index);
             mInterface.onItemCountChange(getItemCount());
+            mAllPointsList.add(chore.getChoreReward());
+            totalPoints = getListTotal();
+            mInterface.onChorePointsTotaled(getListTotal());
+            Log.v("TOTAL POINTS = ", String.valueOf(totalPoints));
         }
+    }
+
+
+    public int getListTotal(){
+        int sum = 0;
+        for (String s : mAllPointsList){
+            int i = Integer.parseInt(s);
+            sum += i;
+        }
+        return sum;
+
     }
 
     @Override
@@ -114,6 +131,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         if (mChoreList.remove(chore)) {
             notifyItemRemoved(index);
             mInterface.onItemCountChange(getItemCount());
+            mInterface.onChorePointsTotaled(getListTotal());
         }
     }
 
@@ -134,5 +152,4 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     public void onCancelled(DatabaseError databaseError) {
 
     }
-
 }
