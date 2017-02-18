@@ -28,7 +28,6 @@ import java.util.List;
 public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ChildEventListener, ValueEventListener {
 
     private ChoreListAdapterInterface mInterface;
-    private LayoutInflater mLayoutInflater;
     private DatabaseReference mChoreReference;
     private List<Chore> mChoreList;
     private ArrayList<String> mAllPointsList;
@@ -41,10 +40,9 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         void onItemCountChange(int itemCount);
     }
 
-    public BaseChoreListAdapter(Context context, ChoreListAdapterInterface adapterInterface) {
+    public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface) {
         super();
         mInterface = adapterInterface;
-        mLayoutInflater = LayoutInflater.from(context);
         mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
         mChoreList = new ArrayList<>();
         mAllPointsList = new ArrayList<>();
@@ -52,21 +50,21 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     @Override
     public ChoreListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = mLayoutInflater.inflate(R.layout.chore_recyclerview_item, viewGroup, false);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chore_recyclerview_item, viewGroup, false);
         view.setFocusable(true);
         Context context = view.getContext();
         return new ChoreListAdapterViewHolder(view, context, mChoreList);
     }
 
     @Override
-    public void onBindViewHolder(ChoreListAdapterViewHolder choreListAdapterViewHolder, int position) {
+    public void onBindViewHolder(ChoreListAdapterViewHolder viewHolder, int position) {
 
-        choreListAdapterViewHolder
+        viewHolder
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
         if (mChoreList.get(position).getChoreReward().equals("0")) {
-            choreListAdapterViewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
+            viewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
         } else {
-            choreListAdapterViewHolder
+            viewHolder
                     .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
         }
 
@@ -74,9 +72,9 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         String choreDateString;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
         int dateFlag = DateUtils.FORMAT_SHOW_DATE;
-        choreTimeString = DateUtils.formatDateTime(mLayoutInflater.getContext(), mChoreList.get(position).getChoreTime(), timeFlag);
-        choreDateString = DateUtils.formatDateTime(mLayoutInflater.getContext(), mChoreList.get(position).getChoreTime(), dateFlag);
-        choreListAdapterViewHolder.mChoreListDueDateTextView.setText(String.format("%s%s%s%s", mLayoutInflater.getContext().getString(R.string.detail_due_string), choreDateString, mLayoutInflater.getContext().getString(R.string.add_chore_at_string), choreTimeString));
+        choreTimeString = DateUtils.formatDateTime(viewHolder.itemView.getContext(), mChoreList.get(position).getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(viewHolder.itemView.getContext(), mChoreList.get(position).getChoreTime(), dateFlag);
+        viewHolder.mChoreListDueDateTextView.setText(String.format("%s%s%s%s", viewHolder.itemView.getContext().getString(R.string.detail_due_string), choreDateString, viewHolder.itemView.getContext().getString(R.string.add_chore_at_string), choreTimeString));
     }
 
     @Override
@@ -111,7 +109,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     }
 
 
-    private int getListTotal(){
+    public int getListTotal(){
         int sum = 0;
         for (String s : mAllPointsList){
             int i = Integer.parseInt(s);
