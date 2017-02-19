@@ -11,8 +11,8 @@
         style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="32sp"
         android:text="Add a chore!"
+        android:textSize="32sp"
         app:layout_columnSpan="3" />
 
     <com.makeramen.roundedimageview.RoundedImageView
@@ -23,17 +23,17 @@
         android:layout_below="@id/detail_chore_title"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:scaleType="fitXY"
-        android:maxHeight="144dp"
-        android:maxWidth="144dp"
         android:adjustViewBounds="true"
         android:contentDescription="@string/detail_chore_picture"
+        android:maxHeight="144dp"
+        android:maxWidth="144dp"
+        android:scaleType="fitXY"
         android:src="@drawable/sink"
         app:layout_column="0"
         app:layout_rowSpan="2"
         app:riv_border_color="@color/colorBackground"
-        app:riv_corner_radius="15dp"
-        app:riv_border_width="5dp"/>
+        app:riv_border_width="5dp"
+        app:riv_corner_radius="15dp" />
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_linear_layout"
@@ -101,17 +101,7 @@
             android:id="@+id/detail_chore_status_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Approved" />
-
-        <CheckBox
-            android:id="@+id/detail_chore_checkbox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:checked="true"
-            app:layout_columnWeight="1"
-            app:layout_gravity="left" />
+            android:text="Approval Status" />
     </android.support.v7.widget.GridLayout>
 
 </RelativeLayout>

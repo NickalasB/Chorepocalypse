@@ -55,6 +55,9 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private String mChorePoints;
     private String mSelectedImageUri;
     private long mChoreTime;
+    private boolean mchoreApprovalRequired = true;
+    private boolean mchoreApproved = true;
+
 
     private DatabaseReference mChoreDatabaseReference;
 
@@ -244,7 +247,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     public void addChore() {
-        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, null);
+        final Chore newChore = new Chore(mChoreName, mChorePoints, mSelectedImageUri, mChoreTime, null, mchoreApprovalRequired, mchoreApproved);
         if (mChoreNameEditText.getText().length() == 0) {
             Toast.makeText(this, R.string.add_chore_blank_chore_toast, Toast.LENGTH_SHORT).show();
         } else if (!mDueDateSelected) {
@@ -260,6 +263,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             pushPhotoToFirebase(newChore);
             setAlarm(newChore);
         }
+
     }
 
     public void pushPhotoToFirebase(final Chore newChore) {
@@ -269,13 +273,13 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     public void setChoreValues(Chore newChore) {
         getAndSetChoreName(newChore);
         getAndSetChorePoints(newChore);
+        getAndSetChoreCheckBoxStatus(newChore);
     }
 
     public void getAndSetChoreName(Chore newChore) {
         mChoreName = mChoreNameEditText.getText().toString();
         newChore.setChoreName(mChoreName);
     }
-
     public void getAndSetChorePoints(Chore newChore) {
         mChorePoints = mChorePointsEditText.getText().toString();
         if (mChorePoints.length() == 0){
@@ -283,7 +287,21 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         }
         newChore.setChoreReward(mChorePoints);
     }
-    
+
+    public void getAndSetChoreCheckBoxStatus(Chore newChore) {
+        if (mChoreCheckbox.isChecked()) {
+            newChore.setChoreApprovalRequired(mchoreApprovalRequired);
+            mchoreApprovalRequired = true;
+            newChore.setChoreApproved(!mchoreApproved);
+            mchoreApproved = false;
+        } else {
+            newChore.setChoreApprovalRequired(!mchoreApprovalRequired);
+            mchoreApprovalRequired = false;
+            newChore.setChoreApproved(mchoreApproved);
+            mchoreApproved = true;
+        }
+    }
+
     @Override
     public void onDueDateSelected(long timeInMillis) {
         Chore chore = new Chore();
@@ -314,4 +332,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
         }
     }
+
+
 }

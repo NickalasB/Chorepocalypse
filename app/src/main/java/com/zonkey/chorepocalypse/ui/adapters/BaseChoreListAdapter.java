@@ -1,6 +1,5 @@
 package com.zonkey.chorepocalypse.ui.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -54,12 +53,11 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     public ChoreListAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chore_recyclerview_item, viewGroup, false);
         view.setFocusable(true);
-        Context context = view.getContext();
-        return new ChoreListAdapterViewHolder(view, context, mChoreList);
+        return new ChoreListAdapterViewHolder(view, mChoreList);
     }
 
     @Override
-    public void onBindViewHolder(ChoreListAdapterViewHolder viewHolder, int position) {
+    public void onBindViewHolder(final ChoreListAdapterViewHolder viewHolder, final int position) {
 
         viewHolder
                 .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
@@ -69,6 +67,14 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             viewHolder
                     .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
         }
+
+//        viewHolder.mChoreListCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                if (!viewHolder.mChoreListCheckBox.isChecked())
+//                    mChoreList.get(position).setChoreReward(String.valueOf(0));
+//            }
+//        });
 
         String choreTimeString;
         String choreDateString;

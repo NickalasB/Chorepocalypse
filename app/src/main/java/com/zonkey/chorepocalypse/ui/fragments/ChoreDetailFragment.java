@@ -6,10 +6,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
@@ -44,9 +41,9 @@ public class ChoreDetailFragment extends Fragment {
 
     @BindView(R.id.detail_chore_status_textview)
     TextView mApprovalStatus;
-
-    @BindView(R.id.detail_chore_checkbox)
-    CheckBox mChoreCheckBox;
+    
+    boolean mIsChoreApprovalRequired;
+    boolean mIsChoreApproved;
 
     public ChoreDetailFragment() {
         // Required empty public constructor
@@ -57,7 +54,6 @@ public class ChoreDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chore_detail, container, false);
         ButterKnife.bind(this, rootView);
-        setUpCheckBox();
         return rootView;
     }
 
@@ -91,13 +87,18 @@ public class ChoreDetailFragment extends Fragment {
 
     public void displayChoreDetails(Chore chore) {
         mChoreTitle.setText(chore.getChoreName());
+        loadChorePoints(chore);
+        loadChorePhoto(chore);
+        loadChoreDueTimeText(chore);
+        loadChoreApprovalStatus(chore);
+    }
+
+    public void loadChorePoints(Chore chore) {
         if (!chore.getChoreReward().equals("")) {
             mCurrentChorePoints.setText(chore.getChoreReward());
         } else {
             mCurrentChorePoints.setText(R.string.detail_no_chore_points);
         }
-        loadChorePhoto(chore);
-        setChoreDueTimeText(chore);
     }
 
     public void loadChorePhoto(Chore chore) {
@@ -110,7 +111,7 @@ public class ChoreDetailFragment extends Fragment {
         }
     }
 
-    public void setChoreDueTimeText(Chore chore) {
+    public void loadChoreDueTimeText(Chore chore) {
         String choreTimeString;
         String choreDateString;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
@@ -120,20 +121,21 @@ public class ChoreDetailFragment extends Fragment {
         mDueDate.setText(String.format("%s%s%s%s", getString(R.string.detail_due_string), choreDateString, getString(R.string.add_chore_at_string), choreTimeString));
     }
 
+    public void loadChoreApprovalStatus(Chore chore) {
+        mIsChoreApprovalRequired = chore.getIsChoreApprovalRequired();
+        mIsChoreApproved = chore.getIsChoreApproved();
+        if (mIsChoreApprovalRequired) {
+            mApprovalStatus.setText("Awaiting Approval");
+        } else {
+            mApprovalStatus.setText("APPROVED!!");
+        }
+    }
+
     public void updateChoreBasedOnListSelection(Chore chore) {
         displayChoreDetails(chore);
     }
 
     public void onChorePointsTotaled(int totalChorePoints) {
         mTotalPointsTextView.setText(String.valueOf(totalChorePoints));
-    }
-
-    private void setUpCheckBox() {
-        mChoreCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Toast.makeText(getActivity(), "Check works", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
