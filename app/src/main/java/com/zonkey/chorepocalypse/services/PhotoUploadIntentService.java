@@ -86,6 +86,7 @@ public class PhotoUploadIntentService extends IntentService {
     }
 
     public void displayUploadNotification(String choreId, long bytesTransferred, long bytesTotal) {
+        // TODO: 2/20/17 after moving this to the IntentService the bytesTransferred isn't working
         double progress = (100.0 * bytesTransferred / bytesTotal);
         mBuilder.setContentTitle(getString(R.string.notification_title))
                 .setContentText(getString(R.string.notification_text) + ((int) progress) + "%...")
@@ -100,6 +101,7 @@ public class PhotoUploadIntentService extends IntentService {
     private void displaySuccessNotification(String choreId) {
         mBuilder.setContentTitle("Chore uploaded successfully!")
                 .setContentText("Now get to work!")
+                // TODO: 2/20/17 change icon
                 .setSmallIcon(R.mipmap.ic_launcher);
         mNotificationManager.notify(choreId.hashCode(), mBuilder.build());
     }
@@ -108,6 +110,7 @@ public class PhotoUploadIntentService extends IntentService {
         Chore mChore = new Chore();
         mBuilder.setContentTitle("Oops- your chore didn't uploaded!")
                 .setContentText("Please try again")
+                // TODO: 2/20/17 change icon 
                 .setSmallIcon(R.mipmap.ic_launcher);
         mNotificationManager.notify(mChore.getChoreKey().hashCode(), mBuilder.build());
     }
