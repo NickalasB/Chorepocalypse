@@ -41,7 +41,7 @@ public class ChoreDetailFragment extends Fragment {
 
     @BindView(R.id.detail_chore_status_textview)
     TextView mApprovalStatus;
-    
+
     boolean mIsChoreApprovalRequired;
     boolean mIsChoreApproved;
 
@@ -125,9 +125,9 @@ public class ChoreDetailFragment extends Fragment {
         mIsChoreApprovalRequired = chore.getIsChoreApprovalRequired();
         mIsChoreApproved = chore.getIsChoreApproved();
         if (mIsChoreApprovalRequired) {
-            mApprovalStatus.setText("Awaiting Approval");
+            mApprovalStatus.setText(R.string.detail_awaiting_approval);
         } else {
-            mApprovalStatus.setText("APPROVED!!");
+            mApprovalStatus.setText(R.string.detail_approved);
         }
     }
 

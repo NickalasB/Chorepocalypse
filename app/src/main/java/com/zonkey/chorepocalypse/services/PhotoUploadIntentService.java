@@ -110,7 +110,7 @@ public class PhotoUploadIntentService extends IntentService {
         Chore mChore = new Chore();
         mBuilder.setContentTitle("Oops- your chore didn't uploaded!")
                 .setContentText("Please try again")
-                // TODO: 2/20/17 change icon 
+                // TODO: 2/20/17 change icon
                 .setSmallIcon(R.mipmap.ic_launcher);
         mNotificationManager.notify(mChore.getChoreKey().hashCode(), mBuilder.build());
     }

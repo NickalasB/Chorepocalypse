@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
@@ -22,6 +23,8 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     private ChoreListAdapterInterface mInterface;
     private List<Chore> mChoreList;
+    private int i;
+    int mTotalPoints;
 
     public void setData(List<Chore> data) {
         mChoreList.clear();
@@ -29,9 +32,9 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             mChoreList.addAll(data);
         }
         mInterface.onItemCountChange(getItemCount());
-        int totalPoints = getListTotal();
-        mInterface.onChorePointsTotaled(totalPoints);
-        Log.v("TOTAL POINTS = ", String.valueOf(totalPoints));
+        mTotalPoints = getListTotal();
+        mInterface.onChorePointsTotaled(mTotalPoints);
+        Log.v("TOTAL POINTS = ", String.valueOf(mTotalPoints));
         notifyDataSetChanged();
     }
 
@@ -58,24 +61,37 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     @Override
     public void onBindViewHolder(final ChoreListAdapterViewHolder viewHolder, final int position) {
+        getChoreApprovalStatus(viewHolder, position);
+        getChoreName(viewHolder, position);
+        getChoreReward(viewHolder, position);
+        getChoreDueDate(viewHolder, position);
+        viewHolder.mChoreListCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (viewHolder.mChoreListCheckBox.isChecked()) {
+                    // TODO: 2/19/17 set the value of i to be the value of the chore points else i = 0
+                }
+            }
+        });
+    }
 
-        viewHolder
-                .mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
+    private void getChoreName(ChoreListAdapterViewHolder viewHolder, int position) {
+        viewHolder.mChoreListNameTextView.setText(mChoreList.get(position).getChoreName());
+    }
+
+    private void getChoreReward(ChoreListAdapterViewHolder viewHolder, int position) {
         if (mChoreList.get(position).getChoreReward().equals("0")) {
             viewHolder.mChoreListPointsTextView.setText(R.string.detail_no_chore_points);
         } else {
-            viewHolder
-                    .mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
+            viewHolder.mChoreListPointsTextView.setText(mChoreList.get(position).getChoreReward());
         }
+    }
 
-//        viewHolder.mChoreListCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                if (!viewHolder.mChoreListCheckBox.isChecked())
-//                    mChoreList.get(position).setChoreReward(String.valueOf(0));
-//            }
-//        });
+    private void getChoreApprovalStatus(ChoreListAdapterViewHolder viewHolder, int position) {
+        viewHolder.mChoreListCheckBox.setChecked(mChoreList.get(position).getIsChoreApproved());
+    }
 
+    private void getChoreDueDate(ChoreListAdapterViewHolder viewHolder, int position) {
         String choreTimeString;
         String choreDateString;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
@@ -93,9 +109,10 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     private int getListTotal() {
         int sum = 0;
         for (Chore chore : mChoreList) {
-            int i = Integer.parseInt(chore.getChoreReward());
+            i = Integer.parseInt(chore.getChoreReward());
             sum += i;
         }
         return sum;
     }
+
 }
