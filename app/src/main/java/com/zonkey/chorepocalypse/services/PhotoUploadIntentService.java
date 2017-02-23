@@ -31,6 +31,9 @@ public class PhotoUploadIntentService extends IntentService {
     private static final String EXTRA_CHORE = "com.zonkey.chorepocalypse.services.extra.CHORE";
     private static final String EXTRA_PHOTO_URI = "com.zonkey.chorepocalypse.services.extra.PHOTO_URI";
 
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
+
     public PhotoUploadIntentService() {
         super("PhotoUploadIntentService");
     }
@@ -45,6 +48,8 @@ public class PhotoUploadIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this);
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_UPLOAD_PHOTO.equals(action)) {
@@ -53,7 +58,7 @@ public class PhotoUploadIntentService extends IntentService {
                 try {
                     uploadPhoto(chore, photoUri);
                 } catch (ExecutionException e) {
-                    // TODO: 2/18/17 display error notification
+                    displayErrorNotification();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -68,30 +73,45 @@ public class PhotoUploadIntentService extends IntentService {
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        displayNotification(choreId, taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount());
+                        displayUploadNotification(String.valueOf(choreId.hashCode()), taskSnapshot.getBytesTransferred(), taskSnapshot.getTotalByteCount());
                     }
                 }));
         if (taskSnapshot.getTask().isSuccessful()) {
             final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("chores").child(choreId);
             chore.setChorePhotoUrl(taskSnapshot.getDownloadUrl().toString());
             databaseReference.setValue(chore);
-            cancelNotification(choreId);
-            // TODO: 2/18/17 display a success notification
+            cancelUploadNotification(String.valueOf(choreId.hashCode()));
+            displaySuccessNotification(choreId);
         }
     }
 
-    public void displayNotification(String choreId, long bytesTransferred, long bytesTotal) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+    public void displayUploadNotification(String choreId, long bytesTransferred, long bytesTotal) {
+        // TODO: 2/20/17 after moving this to the IntentService the bytesTransferred isn't working
         double progress = (100.0 * bytesTransferred / bytesTotal);
-        builder.setContentTitle(getString(R.string.notification_title))
+        mBuilder.setContentTitle(getString(R.string.notification_title))
                 .setContentText(getString(R.string.notification_text) + ((int) progress) + "%...")
                 .setSmallIcon(R.drawable.ic_cloud_upload_24dp);
-        notificationManager.notify(choreId.hashCode(), builder.build());
+        mNotificationManager.notify(choreId.hashCode(), mBuilder.build());
     }
 
-    public void cancelNotification(String choreId) {
-        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancel(choreId.hashCode());
+    public void cancelUploadNotification(String choreId) {
+        mNotificationManager.cancel(choreId.hashCode());
+    }
+
+    private void displaySuccessNotification(String choreId) {
+        mBuilder.setContentTitle("Chore uploaded successfully!")
+                .setContentText("Now get to work!")
+                // TODO: 2/20/17 change icon
+                .setSmallIcon(R.mipmap.ic_launcher);
+        mNotificationManager.notify(choreId.hashCode(), mBuilder.build());
+    }
+
+    private void displayErrorNotification() {
+        Chore mChore = new Chore();
+        mBuilder.setContentTitle("Oops- your chore didn't uploaded!")
+                .setContentText("Please try again")
+                // TODO: 2/20/17 change icon
+                .setSmallIcon(R.mipmap.ic_launcher);
+        mNotificationManager.notify(mChore.getChoreKey().hashCode(), mBuilder.build());
     }
 }

@@ -4,7 +4,7 @@
 
     <!--Detail Screen-->
     <string name="detail_chore_picture">Chore Picture</string>
-    <string name="detail_total_rewards">Total Rewards:</string>
+    <string name="detail_total_rewards">Total Rewards: </string>
     <string name="detail_due_string">"Due: "</string>
 
     <!--shared strings-->
@@ -48,4 +48,6 @@
     <string name="full_screen_got_it_button">OK I get it already!</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="detail_no_chore_points">No points set</string>
+    <string name="detail_awaiting_approval">Awaiting Approval</string>
+    <string name="detail_approved">APPROVED!!</string>
 </resources>
