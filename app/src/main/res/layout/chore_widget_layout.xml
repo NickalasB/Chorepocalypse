@@ -7,6 +7,7 @@
     android:padding="@dimen/widget_margin">
 
     <FrameLayout
+        android:id="@+id/chore_widget_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/widget_appbar_height">
 

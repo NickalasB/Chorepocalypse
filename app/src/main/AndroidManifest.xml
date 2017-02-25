@@ -40,20 +40,42 @@
         <receiver
             android:name=".receivers.AlarmReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true">
+        </receiver>
+
+        <receiver
+            android:name=".ui.widget.ChoreWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <!--<action android:name="com.zonkey.chorepocalypse.ACTION_DATA_UPDATED"/>-->
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info"/>
+
+        </receiver>
+
 
         <activity
             android:name=".ui.activities.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme">
+
+        </activity>
 
         <service
             android:name=".services.AlarmService"
-            android:exported="false"></service>
+            android:exported="false">
+
+        </service>
         <service
             android:name=".services.PhotoUploadIntentService"
-            android:exported="false"></service>
+            android:exported="false">
+
+        </service>
+
     </application>
 
 </manifest>
