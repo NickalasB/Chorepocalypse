@@ -36,27 +36,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.AddChoreActivity" />
-
-        <receiver
-            android:name=".receivers.AlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-        </receiver>
-
-        <receiver
-            android:name=".ui.widget.ChoreWidgetProvider">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-                <!--<action android:name="com.zonkey.chorepocalypse.ACTION_DATA_UPDATED"/>-->
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info"/>
-
-        </receiver>
-
-
         <activity
             android:name=".ui.activities.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -64,6 +43,23 @@
             android:theme="@style/FullscreenTheme">
 
         </activity>
+
+        <receiver
+            android:name=".receivers.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+        </receiver>
+        <receiver android:name=".ui.widget.ChoreWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                 <action android:name="com.zonkey.chorepocalypse.ACTION_DATA_UPDATED"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
 
         <service
             android:name=".services.AlarmService"
@@ -75,7 +71,12 @@
             android:exported="false">
 
         </service>
+        <service
+            android:name=".ui.widget.DetailWidgetRemoteViewsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS">
 
+        </service>
     </application>
 
 </manifest>
