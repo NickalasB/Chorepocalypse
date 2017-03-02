@@ -30,7 +30,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class FullScreenAlarmActivity extends AppCompatActivity {
 
 
     @BindView(R.id.fullscreen_chore_pic)
@@ -89,7 +89,7 @@ public class FullscreenActivity extends AppCompatActivity {
     };
 
     public void stopAlarm() {
-        Intent alarmIntent = new Intent(FullscreenActivity.this, AlarmService.class);
+        Intent alarmIntent = new Intent(FullScreenAlarmActivity.this, AlarmService.class);
         alarmIntent.setAction(AlarmService.ACTION_DISABLE_ALARM);
         startService(alarmIntent);
     }
@@ -100,6 +100,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_fullscreen);
         ButterKnife.bind(this);
+        setTitle(R.string.app_name);
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_chore_pic);
@@ -183,7 +184,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
             void loadChorePhoto(Chore chore) {
                 if (chore.getChorePhotoUrl() != null) {
-                    Glide.with(FullscreenActivity.this)
+                    Glide.with(FullScreenAlarmActivity.this)
                             .load(chore.getChorePhotoUrl())
                             .into(mFullScreenChorePic);
                 } else {

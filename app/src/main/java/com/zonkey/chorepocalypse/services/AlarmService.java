@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 
-import com.zonkey.chorepocalypse.ui.activities.FullscreenActivity;
+import com.zonkey.chorepocalypse.ui.activities.FullScreenAlarmActivity;
 
 public class AlarmService extends Service {
     public static final String ACTION_START_ALARM = "com.zonkey.chorepocalypse.services.action.ACTION_START_ALARM";
@@ -54,7 +54,7 @@ public class AlarmService extends Service {
         mRingTone.play();
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         vibrator.vibrate(250);
-        Intent fullScreenIntent = new Intent(getApplicationContext(), FullscreenActivity.class);
+        Intent fullScreenIntent = new Intent(getApplicationContext(), FullScreenAlarmActivity.class);
         fullScreenIntent.putExtra("choreKey", intent.getStringExtra("choreKey"));
         fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(fullScreenIntent);

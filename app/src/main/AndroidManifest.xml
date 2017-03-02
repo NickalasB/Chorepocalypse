@@ -38,7 +38,7 @@
         </activity>
         <activity android:name=".ui.activities.AddChoreActivity" />
         <activity
-            android:name=".ui.activities.FullscreenActivity"
+            android:name=".ui.activities.FullScreenAlarmActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_fullscreen"
             android:theme="@style/FullscreenTheme"></activity>
