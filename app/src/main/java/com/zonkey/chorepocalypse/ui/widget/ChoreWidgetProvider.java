@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
 import com.zonkey.chorepocalypse.R;
+import com.zonkey.chorepocalypse.ui.activities.ChoreFullScreenDetailActivity;
 import com.zonkey.chorepocalypse.ui.activities.MainActivity;
 
 /**
@@ -38,8 +40,8 @@ public class ChoreWidgetProvider extends AppWidgetProvider {
                 setRemoteAdapterV11(context, views);
             }
 
-            Intent clickIntentTemplate = new Intent(context, MainActivity.class);
-            PendingIntent clickPendingIntentTemplate = android.support.v4.app.TaskStackBuilder.create(context)
+            Intent clickIntentTemplate = new Intent(context, ChoreFullScreenDetailActivity.class);
+            PendingIntent clickPendingIntentTemplate = TaskStackBuilder.create(context)
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.widget_list, clickPendingIntentTemplate);

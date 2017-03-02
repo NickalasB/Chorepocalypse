@@ -138,4 +138,5 @@ public class ChoreDetailFragment extends Fragment {
     public void onChorePointsTotaled(int totalChorePoints) {
         mTotalPointsTextView.setText(String.valueOf(totalChorePoints));
     }
+
 }

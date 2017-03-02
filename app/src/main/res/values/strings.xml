@@ -51,4 +51,6 @@
     <string name="detail_awaiting_approval">Awaiting Approval</string>
     <string name="detail_approved">APPROVED!!</string>
     <string name="widget_empty_list_text">No Chores to Load Yet!</string>
+    <string name="fsd_approved">APPROVED!</string>
+    <string name="fsd_awaiting_approval">Awaiting Approval</string>
 </resources>

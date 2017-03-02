@@ -19,31 +19,22 @@ import java.util.ArrayList;
 /**
  * Created by nickbradshaw on 2/25/17.
  */
-public class WidgetListProvider implements RemoteViewsService.RemoteViewsFactory {
+class WidgetListProvider implements RemoteViewsService.RemoteViewsFactory {
 
     private ArrayList<Chore> choreList = new ArrayList<>();
     private Context context = null;
 
-    public WidgetListProvider(Context context, Intent intent) {
+    WidgetListProvider(Context context, Intent intent) {
         this.context = context;
-//        int appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-//                AppWidgetManager.INVALID_APPWIDGET_ID);
-
-        populateChoreWidgetList();
     }
 
     private void populateChoreWidgetList() {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("chores");
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("chores");
         databaseReference.addValueEventListener(new ValueEventListener() {
-            Chore chore;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                chore = new Chore();
                 for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
-                    Chore chore = choreSnapshot.getValue(Chore.class);
-                    chore.getChoreName();
-                    chore.getChoreTime();
-                    choreList.add(chore);
+                    choreList.add(choreSnapshot.getValue(Chore.class));
                 }
             }
 
@@ -67,23 +58,37 @@ public class WidgetListProvider implements RemoteViewsService.RemoteViewsFactory
     public RemoteViews getViewAt(int position) {
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(), R.layout.chore_widget_item);
-        Chore chore = choreList.get(position);
-        remoteView.setTextViewText(R.id.chore_widget_chore_name_textview, chore.getChoreName());
-        String formattedChoreTime = formatChoreTime(chore);
-        remoteView.setTextViewText(R.id.chore_widget_chore_due_date_textview, formattedChoreTime);
 
+        String choreWidgetChoreReward = choreList.get(position).getChoreReward();
+        boolean choreWidgetApprovalStatus = choreList.get(position).getIsChoreApproved();
+        String choreWidgetPhotoUrl = choreList.get(position).getChorePhotoUrl();
+        String choreWidgetChoreName = choreList.get(position).getChoreName();
+        String formattedDueDate = getFormattedDueDate(position);
+
+        remoteView.setTextViewText(R.id.chore_widget_chore_name_textview, choreWidgetChoreName);
+        remoteView.setTextViewText(R.id.chore_widget_chore_due_date_textview, formattedDueDate);
+
+        final Intent intent = new Intent();
+        intent.putExtra("NAME", choreWidgetChoreName);
+        intent.putExtra("DATE", formattedDueDate);
+        intent.putExtra("REWARD", choreWidgetChoreReward);
+        intent.putExtra("APPROVAL_STATUS", choreWidgetApprovalStatus);
+        intent.putExtra("PHOTO", choreWidgetPhotoUrl);
+
+        remoteView.setOnClickFillInIntent(R.id.widget_single_chore_linear_layout, intent);
         return remoteView;
     }
 
-    private String formatChoreTime(Chore chore) {
+    private String getFormattedDueDate(int position) {
         String choreTimeString;
         String choreDateString;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
-        int dateFlag = DateUtils.FORMAT_SHOW_DATE;
-        choreTimeString = DateUtils.formatDateTime(context, chore.getChoreTime(), timeFlag);
-        choreDateString = DateUtils.formatDateTime(context, chore.getChoreTime(), dateFlag);
+        int dateFlag = DateUtils.FORMAT_NUMERIC_DATE;
+        choreTimeString = DateUtils.formatDateTime(context, choreList.get(position).getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(context, choreList.get(position).getChoreTime(), dateFlag);
         return String.format("%s%s%s%s", context.getString(R.string.detail_due_string), choreDateString, context.getString(R.string.add_chore_at_string), choreTimeString);
     }
+
 
     @Override
     public RemoteViews getLoadingView() {
@@ -102,16 +107,15 @@ public class WidgetListProvider implements RemoteViewsService.RemoteViewsFactory
 
     @Override
     public void onCreate() {
-
+        populateChoreWidgetList();
     }
 
     @Override
     public void onDataSetChanged() {
-        populateChoreWidgetList();
+
     }
 
     @Override
     public void onDestroy() {
     }
-
 }
