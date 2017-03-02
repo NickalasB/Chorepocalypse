@@ -12,12 +12,13 @@ import com.zonkey.chorepocalypse.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ChoreFullScreenDetailActivity extends AppCompatActivity {
 
-    //FSD = FullScreenDetail
+    /*
+       FSD = FullScreenDetail
+     */
 
     @BindView(R.id.full_screen_detail_chore_title)
     TextView mFSDChoreTitle;
@@ -44,21 +45,11 @@ public class ChoreFullScreenDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setCustomFont();
         setContentView(R.layout.activity_chore_detail_full_screen);
         ButterKnife.bind(this);
         mIntent = getIntent();
         loadChoreTextDetails();
         loadChorePhoto();
-    }
-
-    private void setCustomFont() {
-        //defining custom default font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/GloriaHallelujah.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
     }
 
     private void loadChoreTextDetails() {

@@ -24,7 +24,6 @@ import com.zonkey.chorepocalypse.services.AlarmService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
@@ -98,12 +97,7 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //defining custom default font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/GloriaHallelujah.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+
         setContentView(R.layout.activity_fullscreen);
         ButterKnife.bind(this);
         mVisible = true;

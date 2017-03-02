@@ -4,8 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.widget.RemoteViewsService;
 
-import com.zonkey.chorepocalypse.ui.widget.WidgetListProvider;
-
 public class DetailWidgetRemoteViewsService extends RemoteViewsService {
 
     @Override
