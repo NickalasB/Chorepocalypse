@@ -125,8 +125,6 @@ public class ChoreDetailFragment extends Fragment {
 
     }
 
-
-
     public String loadChoreDueTimeText(Chore chore) {
         String choreTimeString;
         String choreDateString;
@@ -156,5 +154,4 @@ public class ChoreDetailFragment extends Fragment {
     public void onChorePointsTotaled(int totalChorePoints) {
         mTotalPointsTextView.setText(String.valueOf(totalChorePoints));
     }
-
 }
