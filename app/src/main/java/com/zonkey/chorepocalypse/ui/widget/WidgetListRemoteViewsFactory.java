@@ -19,12 +19,12 @@ import java.util.ArrayList;
 /**
  * Created by nickbradshaw on 2/25/17.
  */
-class WidgetListProvider implements RemoteViewsService.RemoteViewsFactory {
+class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private ArrayList<Chore> choreList = new ArrayList<>();
     private Context context = null;
 
-    WidgetListProvider(Context context, Intent intent) {
+    WidgetListRemoteViewsFactory(Context context, Intent intent) {
         this.context = context;
     }
 
