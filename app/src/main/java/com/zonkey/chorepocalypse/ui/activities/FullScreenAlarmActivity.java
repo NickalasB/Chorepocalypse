@@ -24,14 +24,13 @@ import com.zonkey.chorepocalypse.services.AlarmService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class FullScreenAlarmActivity extends AppCompatActivity {
 
 
     @BindView(R.id.fullscreen_chore_pic)
@@ -90,7 +89,7 @@ public class FullscreenActivity extends AppCompatActivity {
     };
 
     public void stopAlarm() {
-        Intent alarmIntent = new Intent(FullscreenActivity.this, AlarmService.class);
+        Intent alarmIntent = new Intent(FullScreenAlarmActivity.this, AlarmService.class);
         alarmIntent.setAction(AlarmService.ACTION_DISABLE_ALARM);
         startService(alarmIntent);
     }
@@ -98,14 +97,10 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //defining custom default font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/GloriaHallelujah.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+
         setContentView(R.layout.activity_fullscreen);
         ButterKnife.bind(this);
+        setTitle(R.string.app_name);
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.fullscreen_chore_pic);
@@ -189,7 +184,7 @@ public class FullscreenActivity extends AppCompatActivity {
 
             void loadChorePhoto(Chore chore) {
                 if (chore.getChorePhotoUrl() != null) {
-                    Glide.with(FullscreenActivity.this)
+                    Glide.with(FullScreenAlarmActivity.this)
                             .load(chore.getChorePhotoUrl())
                             .into(mFullScreenChorePic);
                 } else {

@@ -3,6 +3,8 @@ package com.zonkey.chorepocalypse.ui.activities;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +35,7 @@ import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 import com.zonkey.chorepocalypse.services.PhotoUploadIntentService;
 import com.zonkey.chorepocalypse.ui.fragments.TimePickerFragment;
+import com.zonkey.chorepocalypse.ui.widget.ChoreWidgetProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +46,6 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class AddChoreActivity extends AppCompatActivity implements TimePickerFragment.OnDueDateSelectedListener {
@@ -99,12 +101,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //defining custom default font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/GloriaHallelujah.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
         setContentView(R.layout.activity_add_chore);
         ButterKnife.bind(this);
 
@@ -262,6 +258,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore);
             setAlarm(newChore);
+            updateWidgets();
         }
 
     }
@@ -333,5 +330,13 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         }
     }
 
+    // TODO: 2/27/17 figure out how to update widgets
+    private void updateWidgets() {
+        ComponentName name = new ComponentName(this, ChoreWidgetProvider.class);
+        int[] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
+        Intent intent = new Intent(this, ChoreWidgetProvider.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
+    }
 
 }

@@ -19,7 +19,6 @@ import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity implements BaseChoreListAdapter.ChoreListAdapterInterface {
@@ -32,12 +31,7 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //defining custom default font
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                .setDefaultFontPath("fonts/GloriaHallelujah.ttf")
-                .setFontAttrId(R.attr.fontPath)
-                .build()
-        );
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -53,12 +47,12 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
             }
         });
     }
-
     //Wrapping the Activity Context for custom font
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -76,6 +76,6 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
 
     @Override
     public void onLoaderReset(Loader<List<Chore>> loader) {
-        mChoreListAdapter.setData(null);
+        loader = null;
     }
 }
