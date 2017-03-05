@@ -66,7 +66,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private boolean mDueDateSelected;
     private boolean mChoreNameSelected;
 
-
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
 
@@ -328,14 +327,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
         }
-    }
-
-    public void removeAlarm(Chore chore) {
-        Toast.makeText(this, "Alarm Canceled", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, chore.getChoreKey().hashCode(), intent, 0);
-        AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.cancel(pendingIntent);
     }
 
     // TODO: 2/27/17 figure out how to update widgets
