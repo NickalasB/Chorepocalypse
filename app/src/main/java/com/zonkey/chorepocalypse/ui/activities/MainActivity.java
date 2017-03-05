@@ -1,5 +1,7 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.view.View;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreDetailFragment;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;

@@ -1,5 +1,9 @@
 package com.zonkey.chorepocalypse.ui.adapters;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -16,6 +20,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 import com.zonkey.chorepocalypse.touchHelper.ItemTouchHelperAdapter;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
@@ -32,6 +37,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     private List<Chore> mChoreList;
     private int i;
     int mTotalPoints;
+    private Context mContext;
 
     public void setData(List<Chore> data) {
         mChoreList.clear();
@@ -45,35 +51,6 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         notifyDataSetChanged();
     }
 
-    @Override
-    public void onItemMove(int fromPosition, int toPosition) {
-        Chore previousChore = mChoreList.remove(fromPosition);
-        mChoreList.add(toPosition > fromPosition ? toPosition -1 : toPosition, previousChore);
-        notifyItemRemoved(fromPosition);
-    }
-
-    @Override
-    public void onItemDismiss(final int position) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        Query choreQuery = databaseRef.child("chores").child(mChoreList.get(position).getChoreKey());
-        choreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
-                    choreSnapshot.getRef().removeValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e("BaseChoreListAdapter", "onCancelled", databaseError.toException());
-            }
-        });
-
-        mChoreList.remove(position);
-        notifyItemRemoved(position);
-    }
-
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
 
@@ -83,10 +60,11 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     }
 
-    public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface) {
+    public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface, Context context) {
         super();
         mInterface = adapterInterface;
         mChoreList = new ArrayList<>();
+        this.mContext = context;
     }
 
     @Override
@@ -150,5 +128,45 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             sum += i;
         }
         return sum;
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Chore previousChore = mChoreList.remove(fromPosition);
+        mChoreList.add(toPosition > fromPosition ? toPosition -1 : toPosition, previousChore);
+        notifyItemRemoved(fromPosition);
+    }
+
+    @Override
+    public void onItemDismiss(final int position) {
+        removeAlarm(mChoreList.get(position));
+        removeChoreFromFirebaseDatabase(position);
+        mChoreList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    private void removeChoreFromFirebaseDatabase(int position) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        Query choreQuery = databaseRef.child("chores").child(mChoreList.get(position).getChoreKey());
+        choreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
+                    choreSnapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("BaseChoreListAdapter", "onCancelled", databaseError.toException());
+            }
+        });
+    }
+
+    private void removeAlarm(Chore chore) {
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, chore.getChoreKey().hashCode(), intent, 0);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
     }
 }

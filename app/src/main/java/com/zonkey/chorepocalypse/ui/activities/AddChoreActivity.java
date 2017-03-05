@@ -66,7 +66,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private boolean mDueDateSelected;
     private boolean mChoreNameSelected;
 
-
     @BindView(R.id.add_chore_name)
     EditText mChoreNameEditText;
 

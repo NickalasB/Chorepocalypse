@@ -52,7 +52,7 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
         mLinearLayoutManager.setReverseLayout(true);
         mLinearLayoutManager.setStackFromEnd(true);
         mChoreRecyclerView.setHasFixedSize(true);
-        mChoreListAdapter = new BaseChoreListAdapter((MainActivity) getActivity());
+        mChoreListAdapter = new BaseChoreListAdapter((MainActivity) getActivity(), getContext());
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
         getLoaderManager().initLoader(0, null, this);
 
