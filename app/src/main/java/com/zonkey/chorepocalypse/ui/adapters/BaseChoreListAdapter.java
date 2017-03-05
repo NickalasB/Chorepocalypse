@@ -1,5 +1,6 @@
 package com.zonkey.chorepocalypse.ui.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.touchHelper.ItemTouchHelperAdapter;
+import com.zonkey.chorepocalypse.ui.activities.AddChoreActivity;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     private List<Chore> mChoreList;
     private int i;
     int mTotalPoints;
+    private Context mContext;
+
 
     public void setData(List<Chore> data) {
         mChoreList.clear();
@@ -54,6 +58,10 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     @Override
     public void onItemDismiss(final int position) {
+        if (mContext instanceof AddChoreActivity) {
+            ((AddChoreActivity)mContext).removeAlarm(mChoreList.get(position));
+        }
+
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
         Query choreQuery = databaseRef.child("chores").child(mChoreList.get(position).getChoreKey());
         choreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -61,6 +69,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
                     choreSnapshot.getRef().removeValue();
+
                 }
             }
 
@@ -83,10 +92,11 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     }
 
-    public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface) {
+    public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface, Context context) {
         super();
         mInterface = adapterInterface;
         mChoreList = new ArrayList<>();
+        this.mContext = context;
     }
 
     @Override
