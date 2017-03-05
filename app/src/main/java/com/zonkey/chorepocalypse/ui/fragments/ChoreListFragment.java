@@ -6,6 +6,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.loaders.FirebaseChoreLoader;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.touchHelper.SimpleItemTouchHelperCallback;
 import com.zonkey.chorepocalypse.ui.activities.MainActivity;
 import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 
@@ -33,6 +35,7 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
 
     private LinearLayoutManager mLinearLayoutManager;
     private BaseChoreListAdapter mChoreListAdapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     public ChoreListFragment() {
         // Required empty public constructor
@@ -52,6 +55,11 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
         mChoreListAdapter = new BaseChoreListAdapter((MainActivity) getActivity());
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
         getLoaderManager().initLoader(0, null, this);
+
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mChoreListAdapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mChoreRecyclerView);
+
         return rootView;
     }
 

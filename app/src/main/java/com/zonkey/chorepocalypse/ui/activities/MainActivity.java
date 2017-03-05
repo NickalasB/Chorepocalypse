@@ -47,12 +47,12 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
             }
         });
     }
+
     //Wrapping the Activity Context for custom font
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,6 +94,5 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
         ChoreListFragment choreListFragment = (ChoreListFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.chore_list_fragment);
         choreListFragment.onItemCountChange(itemCount);
-
     }
 }
