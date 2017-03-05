@@ -8,8 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
+import com.zonkey.chorepocalypse.touchHelper.ItemTouchHelperAdapter;
 import com.zonkey.chorepocalypse.ui.viewHolders.ChoreListAdapterViewHolder;
 
 import java.util.ArrayList;
@@ -19,7 +26,7 @@ import java.util.List;
  * Created by nickbradshaw on 1/14/17.
  */
 
-public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> {
+public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ItemTouchHelperAdapter {
 
     private ChoreListAdapterInterface mInterface;
     private List<Chore> mChoreList;
@@ -38,12 +45,49 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         notifyDataSetChanged();
     }
 
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Chore previousChore = mChoreList.remove(fromPosition);
+        mChoreList.add(toPosition > fromPosition ? toPosition -1 : toPosition, previousChore);
+        notifyItemRemoved(fromPosition);
+        
+
+    }
+
+    @Override
+    public void onItemDismiss(final int position) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
+        Query choreQuery = databaseRef.child("chores").child(mChoreList.get(position).getChoreKey());
+        choreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
+
+                    choreSnapshot.getRef().removeValue();
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e("BaseChoreListAdapter", "onCancelled", databaseError.toException());
+            }
+        });
+
+
+        mChoreList.remove(position);
+        notifyItemRemoved(position);
+
+
+    }
+
     public interface ChoreListAdapterInterface {
         void onListChoreSelected(Chore chore);
 
         void onChorePointsTotaled(int totalChorePoints);
 
         void onItemCountChange(int itemCount);
+
     }
 
     public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface) {
@@ -114,5 +158,4 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         }
         return sum;
     }
-
 }
