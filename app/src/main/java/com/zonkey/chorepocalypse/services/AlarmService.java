@@ -15,6 +15,7 @@ import com.zonkey.chorepocalypse.ui.activities.FullScreenAlarmActivity;
 public class AlarmService extends Service {
     public static final String ACTION_START_ALARM = "com.zonkey.chorepocalypse.services.action.ACTION_START_ALARM";
     public static final String ACTION_DISABLE_ALARM = "com.zonkey.chorepocalypse.services.action.ACTION_DISABLE_ALARM";
+    public static final String CHORE_KEY = "choreKey";
 
     private Ringtone mRingTone;
 
@@ -48,14 +49,17 @@ public class AlarmService extends Service {
 
     private void stopAlarm() {
         mRingTone.stop();
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator.cancel();
     }
 
     private void startAlarm(Intent intent) {
         mRingTone.play();
         Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(250);
+        long[] vibratePattern = {0, 100, 50};
+        vibrator.vibrate(vibratePattern,0);
         Intent fullScreenIntent = new Intent(getApplicationContext(), FullScreenAlarmActivity.class);
-        fullScreenIntent.putExtra("choreKey", intent.getStringExtra("choreKey"));
+        fullScreenIntent.putExtra(CHORE_KEY, intent.getStringExtra(CHORE_KEY));
         fullScreenIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(fullScreenIntent);
     }
