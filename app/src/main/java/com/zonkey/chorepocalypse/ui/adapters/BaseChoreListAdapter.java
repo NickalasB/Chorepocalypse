@@ -50,8 +50,6 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         Chore previousChore = mChoreList.remove(fromPosition);
         mChoreList.add(toPosition > fromPosition ? toPosition -1 : toPosition, previousChore);
         notifyItemRemoved(fromPosition);
-        
-
     }
 
     @Override
@@ -62,9 +60,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
-
                     choreSnapshot.getRef().removeValue();
-
                 }
             }
 
@@ -74,11 +70,8 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
             }
         });
 
-
         mChoreList.remove(position);
         notifyItemRemoved(position);
-
-
     }
 
     public interface ChoreListAdapterInterface {
