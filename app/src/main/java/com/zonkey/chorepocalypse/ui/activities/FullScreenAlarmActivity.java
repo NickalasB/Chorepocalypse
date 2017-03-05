@@ -33,8 +33,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class FullScreenAlarmActivity extends AppCompatActivity {
 
-
     public static final String CHORES = "chores";
+
     @BindView(R.id.fullscreen_chore_pic)
     RoundedImageView mFullScreenChorePic;
 
@@ -100,7 +100,7 @@ public class FullScreenAlarmActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_fullscreen);
+        setContentView(R.layout.activity_fullscreen_alarm);
         ButterKnife.bind(this);
         setTitle(R.string.app_name);
         mVisible = true;
