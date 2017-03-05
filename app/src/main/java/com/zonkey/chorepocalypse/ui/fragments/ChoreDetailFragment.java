@@ -26,6 +26,11 @@ import butterknife.ButterKnife;
 
 public class ChoreDetailFragment extends Fragment {
 
+    public static final String NAME = "NAME";
+    public static final String PHOTO = "PHOTO";
+    public static final String REWARD = "REWARD";
+    public static final String DATE = "DATE";
+
     @BindView(R.id.detail_chore_title)
     TextView mChoreTitle;
 
@@ -115,10 +120,10 @@ public class ChoreDetailFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ChoreFullScreenDetailActivity.class);
-                intent.putExtra("NAME", chore.getChoreName());
-                intent.putExtra("PHOTO", chore.getChorePhotoUrl());
-                intent.putExtra("REWARD", chore.getChoreReward());
-                intent.putExtra("DATE", loadChoreDueTimeText(chore));
+                intent.putExtra(NAME, chore.getChoreName());
+                intent.putExtra(PHOTO, chore.getChorePhotoUrl());
+                intent.putExtra(REWARD, chore.getChoreReward());
+                intent.putExtra(DATE, loadChoreDueTimeText(chore));
                 startActivity(intent);
             }
         });

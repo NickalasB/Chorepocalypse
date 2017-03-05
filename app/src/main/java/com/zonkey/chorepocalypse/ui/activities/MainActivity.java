@@ -1,12 +1,9 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,7 +12,6 @@ import android.view.View;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
-import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreDetailFragment;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;
@@ -43,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
                 Intent addChoreIntent = new Intent(getApplicationContext(), AddChoreActivity.class);
                 startActivity(addChoreIntent);
             }

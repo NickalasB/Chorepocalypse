@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class FullScreenAlarmActivity extends AppCompatActivity {
 
 
+    public static final String CHORES = "chores";
     @BindView(R.id.fullscreen_chore_pic)
     RoundedImageView mFullScreenChorePic;
 
@@ -171,7 +173,7 @@ public class FullScreenAlarmActivity extends AppCompatActivity {
 
     public void fetchChoreData(String choreKey) {
         FirebaseDatabase choreDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference choreDatabaseReference = choreDatabase.getReference("chores").child(choreKey);
+        DatabaseReference choreDatabaseReference = choreDatabase.getReference(CHORES).child(choreKey);
         choreDatabaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -194,7 +196,7 @@ public class FullScreenAlarmActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.e("FullScreenAlarmActivity", "onCancelled", databaseError.toException());
             }
         });
     }

@@ -53,4 +53,11 @@
     <string name="widget_empty_list_text">No Chores to Load Yet!</string>
     <string name="fsd_approved">APPROVED!</string>
     <string name="fsd_awaiting_approval">Awaiting Approval</string>
+    <string name="add_chore_select_picture">Select Picture</string>
+    <string name="add_chore_choose_image">Choose image using...</string>
+    <string name="add_chore_error">Error creating photo file</string>
+    <string name="chore_upload_success">Chore uploaded successfully!</string>
+    <string name="get_to_work">Now get to work!</string>
+    <string name="photo_upload_error_title">Oops- your chore didn\'t uploaded!</string>
+    <string name="photo_upload_error_content_text">Please try again</string>
 </resources>

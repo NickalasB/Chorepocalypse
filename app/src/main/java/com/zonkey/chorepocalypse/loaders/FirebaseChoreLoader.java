@@ -19,11 +19,12 @@ import java.util.List;
 
 public class FirebaseChoreLoader extends Loader<List<Chore>> implements ValueEventListener {
 
+    private static final String CHORES = "chores";
     private DatabaseReference mChoreReference;
 
     public FirebaseChoreLoader(Context context) {
         super(context);
-        mChoreReference = FirebaseDatabase.getInstance().getReference("chores");
+        mChoreReference = FirebaseDatabase.getInstance().getReference(CHORES);
     }
 
     @Override

@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.zonkey.chorepocalypse.R;
 import com.zonkey.chorepocalypse.models.Chore;
@@ -51,7 +50,6 @@ public class ChoreListAdapterViewHolder extends RecyclerView.ViewHolder implemen
     @Override
     public void onClick(View view) {
         Log.d("RecyclerView", "CLICK!");
-        Toast.makeText(view.getContext(), "You clicked # " + getLayoutPosition(), Toast.LENGTH_SHORT).show();
         getAdapterPosition();
         mchoreListAdapterInterface.onListChoreSelected(mChoreList.get(getAdapterPosition()));
     }

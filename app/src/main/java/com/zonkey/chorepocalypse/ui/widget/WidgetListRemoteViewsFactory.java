@@ -21,6 +21,13 @@ import java.util.ArrayList;
  */
 class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
+    private static final String CHORES = "chores";
+    private static final String NAME = "NAME";
+    private static final String DATE = "DATE";
+    private static final String REWARD = "REWARD";
+    private static final String APPROVAL_STATUS = "APPROVAL_STATUS";
+    private static final String PHOTO = "PHOTO";
+
     private ArrayList<Chore> choreList = new ArrayList<>();
     private Context context = null;
 
@@ -29,7 +36,7 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     }
 
     private void populateChoreWidgetList() {
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("chores");
+        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(CHORES);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -69,11 +76,11 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
         remoteView.setTextViewText(R.id.chore_widget_chore_due_date_textview, formattedDueDate);
 
         final Intent intent = new Intent();
-        intent.putExtra("NAME", choreWidgetChoreName);
-        intent.putExtra("DATE", formattedDueDate);
-        intent.putExtra("REWARD", choreWidgetChoreReward);
-        intent.putExtra("APPROVAL_STATUS", choreWidgetApprovalStatus);
-        intent.putExtra("PHOTO", choreWidgetPhotoUrl);
+        intent.putExtra(NAME, choreWidgetChoreName);
+        intent.putExtra(DATE, formattedDueDate);
+        intent.putExtra(REWARD, choreWidgetChoreReward);
+        intent.putExtra(APPROVAL_STATUS, choreWidgetApprovalStatus);
+        intent.putExtra(PHOTO, choreWidgetPhotoUrl);
 
         remoteView.setOnClickFillInIntent(R.id.widget_single_chore_linear_layout, intent);
         return remoteView;

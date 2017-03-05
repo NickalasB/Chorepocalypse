@@ -33,6 +33,7 @@ import java.util.List;
 
 public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterViewHolder> implements ItemTouchHelperAdapter {
 
+    public static final String CHORES = "chores";
     private ChoreListAdapterInterface mInterface;
     private List<Chore> mChoreList;
     private int i;
@@ -47,7 +48,6 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         mInterface.onItemCountChange(getItemCount());
         mTotalPoints = getListTotal();
         mInterface.onChorePointsTotaled(mTotalPoints);
-        Log.v("TOTAL POINTS = ", String.valueOf(mTotalPoints));
         notifyDataSetChanged();
     }
 
@@ -147,7 +147,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
     private void removeChoreFromFirebaseDatabase(int position) {
         DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference();
-        Query choreQuery = databaseRef.child("chores").child(mChoreList.get(position).getChoreKey());
+        Query choreQuery = databaseRef.child(CHORES).child(mChoreList.get(position).getChoreKey());
         choreQuery.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

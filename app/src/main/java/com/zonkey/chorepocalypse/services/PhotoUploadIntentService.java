@@ -30,12 +30,13 @@ public class PhotoUploadIntentService extends IntentService {
     private static final String ACTION_UPLOAD_PHOTO = "com.zonkey.chorepocalypse.services.action.UPLOAD_PHOTO";
     private static final String EXTRA_CHORE = "com.zonkey.chorepocalypse.services.extra.CHORE";
     private static final String EXTRA_PHOTO_URI = "com.zonkey.chorepocalypse.services.extra.PHOTO_URI";
+    public static final String PHOTO_UPLOAD_INTENT_SERVICE = "PhotoUploadIntentService";
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
 
     public PhotoUploadIntentService() {
-        super("PhotoUploadIntentService");
+        super(PHOTO_UPLOAD_INTENT_SERVICE);
     }
 
     public static void uploadPhoto(Context context, Chore chore, String photoUri) {
@@ -99,8 +100,8 @@ public class PhotoUploadIntentService extends IntentService {
     }
 
     private void displaySuccessNotification(String choreId) {
-        mBuilder.setContentTitle("Chore uploaded successfully!")
-                .setContentText("Now get to work!")
+        mBuilder.setContentTitle(getString(R.string.chore_upload_success))
+                .setContentText(getString(R.string.get_to_work))
                 // TODO: 2/20/17 change icon
                 .setSmallIcon(R.mipmap.ic_launcher);
         mNotificationManager.notify(choreId.hashCode(), mBuilder.build());
@@ -108,8 +109,8 @@ public class PhotoUploadIntentService extends IntentService {
 
     private void displayErrorNotification() {
         Chore mChore = new Chore();
-        mBuilder.setContentTitle("Oops- your chore didn't uploaded!")
-                .setContentText("Please try again")
+        mBuilder.setContentTitle(getString(R.string.photo_upload_error_title))
+                .setContentText(getString(R.string.photo_upload_error_content_text))
                 // TODO: 2/20/17 change icon
                 .setSmallIcon(R.mipmap.ic_launcher);
         mNotificationManager.notify(mChore.getChoreKey().hashCode(), mBuilder.build());

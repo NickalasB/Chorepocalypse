@@ -15,6 +15,11 @@ import butterknife.ButterKnife;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class ChoreFullScreenDetailActivity extends AppCompatActivity {
+    public static final String NAME = "NAME";
+    public static final String REWARD = "REWARD";
+    public static final String DATE = "DATE";
+    public static final String APPROVAL_STATUS = "APPROVAL_STATUS";
+    public static final String PHOTO = "PHOTO";
 
     /*
        FSD = FullScreenDetail
@@ -53,12 +58,12 @@ public class ChoreFullScreenDetailActivity extends AppCompatActivity {
     }
 
     private void loadChoreTextDetails() {
-        if (mIntent.hasExtra("NAME")) {
-            mFSDChoreTitle.setText(mIntent.getStringExtra("NAME"));
-            mFSDChorePoints.setText(mIntent.getStringExtra("REWARD"));
-            mFSDChoreDueDate.setText(mIntent.getStringExtra("DATE"));
+        if (mIntent.hasExtra(NAME)) {
+            mFSDChoreTitle.setText(mIntent.getStringExtra(NAME));
+            mFSDChorePoints.setText(mIntent.getStringExtra(REWARD));
+            mFSDChoreDueDate.setText(mIntent.getStringExtra(DATE));
 
-            boolean approved = mIntent.getBooleanExtra("APPROVAL_STATUS", true);
+            boolean approved = mIntent.getBooleanExtra(APPROVAL_STATUS, true);
             if (approved) {
                 mFSDChoreApprovalStatus.setText(R.string.fsd_approved);
             } else {
@@ -68,9 +73,9 @@ public class ChoreFullScreenDetailActivity extends AppCompatActivity {
     }
 
     public void loadChorePhoto() {
-        if (mIntent.getStringExtra("PHOTO") != null) {
+        if (mIntent.getStringExtra(PHOTO) != null) {
             Glide.with(ChoreFullScreenDetailActivity.this)
-                    .load(mIntent.getStringExtra("PHOTO"))
+                    .load(mIntent.getStringExtra(PHOTO))
                     .into(mFSDChorePic);
         } else {
             mFSDChorePic.setImageResource(R.drawable.sink);

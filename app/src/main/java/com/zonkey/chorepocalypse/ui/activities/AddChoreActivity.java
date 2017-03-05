@@ -52,6 +52,9 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     static final int REQUEST_TAKE_PHOTO = 1;
     private static final int RC_PHOTO_PICKER = 2;
+    public static final String CHORE_KEY = "choreKey";
+    public static final String CHORES = "chores";
+    public static final String CHOREPOCALYPSE_FILEPROVIDER = "com.zonkey.chorepocalypse.fileprovider";
 
     private String mChoreName;
     private String mChorePoints;
@@ -59,7 +62,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     private long mChoreTime;
     private boolean mchoreApprovalRequired = true;
     private boolean mchoreApproved = true;
-
 
     private DatabaseReference mChoreDatabaseReference;
 
@@ -106,7 +108,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         mChoreDetailsIntent = new Intent(getApplicationContext(), MainActivity.class);
 
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        mChoreDatabaseReference = firebaseDatabase.getReference().child("chores");
+        mChoreDatabaseReference = firebaseDatabase.getReference().child(CHORES);
 
         mChorePointsEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
         mChorePic.setVisibility(View.INVISIBLE);
@@ -149,7 +151,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
                         getString(R.string.pic_picker_gallery)
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(AddChoreActivity.this);
-                builder.setTitle("Choose image using...");
+                builder.setTitle(R.string.add_chore_choose_image);
                 builder.setItems(imageSources, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -204,7 +206,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         intent.setType("image/jpeg");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         startActivityForResult(Intent.createChooser(intent,
-                "Select Picture"), RC_PHOTO_PICKER);
+                getString(R.string.add_chore_select_picture)), RC_PHOTO_PICKER);
     }
 
     private void launchCameraPhotoPicker() {
@@ -215,11 +217,11 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 // Error occurred while creating the File
-                Toast.makeText(this, "Error creating photo file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.add_chore_error, Toast.LENGTH_SHORT).show();
             }
             if (photoFile != null) {
                 Uri photoUri = FileProvider.getUriForFile(this,
-                        "com.zonkey.chorepocalypse.fileprovider",
+                        CHOREPOCALYPSE_FILEPROVIDER,
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
@@ -230,7 +232,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     private File createImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
+        String imageFileName = String.format("JPEG_%s_", timeStamp);
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File choreImage = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -319,7 +321,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
 
     public void setAlarm(Chore chore) {
         Intent intent = new Intent(this, AlarmReceiver.class);
-        intent.putExtra("choreKey", chore.getChoreKey());
+        intent.putExtra(CHORE_KEY, chore.getChoreKey());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, chore.getChoreKey().hashCode(), intent, 0);
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

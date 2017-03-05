@@ -33,9 +33,7 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
     @BindView(R.id.empty_recyclerview)
     TextView mEmptyRecyclerView;
 
-    private LinearLayoutManager mLinearLayoutManager;
     private BaseChoreListAdapter mChoreListAdapter;
-    private ItemTouchHelper mItemTouchHelper;
 
     public ChoreListFragment() {
         // Required empty public constructor
@@ -47,18 +45,18 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
         View rootView = inflater.inflate(R.layout.fragment_chore_list, container, false);
         ButterKnife.bind(this, rootView);
 
-        mLinearLayoutManager = new LinearLayoutManager(getActivity());
-        mChoreRecyclerView.setLayoutManager(mLinearLayoutManager);
-        mLinearLayoutManager.setReverseLayout(true);
-        mLinearLayoutManager.setStackFromEnd(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mChoreRecyclerView.setLayoutManager(linearLayoutManager);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
         mChoreRecyclerView.setHasFixedSize(true);
         mChoreListAdapter = new BaseChoreListAdapter((MainActivity) getActivity(), getContext());
         mChoreRecyclerView.setAdapter(mChoreListAdapter);
         getLoaderManager().initLoader(0, null, this);
 
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(mChoreListAdapter);
-        mItemTouchHelper = new ItemTouchHelper(callback);
-        mItemTouchHelper.attachToRecyclerView(mChoreRecyclerView);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(mChoreRecyclerView);
 
         return rootView;
     }
