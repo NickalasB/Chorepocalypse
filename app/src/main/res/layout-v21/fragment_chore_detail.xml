@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorBackgroundDark"
@@ -11,38 +12,48 @@
         style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add a chore!"
-        android:textSize="32sp"
-        app:layout_columnSpan="3" />
+        android:gravity="center_horizontal"
+        android:text="@string/detail_add_a_chore"
+        android:textSize="32sp" />
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/detail_chore_pic"
-        style="@style/MaterialDesignHorizontalMargin"
+    <FrameLayout
+        android:id="@+id/frame_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detail_chore_title"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/detail_chore_picture"
-        android:maxHeight="144dp"
-        android:maxWidth="144dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/sink"
-        app:layout_column="0"
-        app:layout_rowSpan="2"
-        app:riv_border_color="@color/colorBackground"
-        app:riv_border_width="5dp"
-        app:riv_corner_radius="15dp" />
+        android:layout_below="@id/detail_chore_title">
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/detail_chore_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="8dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/detail_chore_picture"
+            android:maxHeight="144dp"
+            android:maxWidth="144dp"
+            android:scaleType="fitXY"
+            app:layout_column="0"
+            app:layout_rowSpan="2"
+            app:riv_border_color="@color/colorBackground"
+            app:riv_border_width="5dp"
+            app:riv_corner_radius="15dp" />
+
+        <ProgressBar
+            android:id="@+id/chore_detail_fragment_progress_bar"
+            style="@style/MaterialDesignHorizontalMargin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/chore_linear_layout"
         style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/chore_grid_layout"
-        android:layout_alignRight="@+id/chore_grid_layout"
-        android:layout_below="@+id/detail_chore_pic"
+        android:layout_below="@id/frame_layout"
         app:columnCount="2">
 
         <TextView
@@ -69,39 +80,32 @@
             android:id="@+id/detail_total_chore_points"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1,525"
-            app:layout_columnWeight="1" />
-    </android.support.v7.widget.GridLayout>
-
-    <android.support.v7.widget.GridLayout
-        android:id="@+id/chore_grid_layout"
-        style="@style/MaterialDesignHorizontalMargin"
-        android:layout_width="match_parent"
-        android:layout_height="96dp"
-        android:layout_below="@+id/detail_chore_title"
-        android:layout_marginTop="9dp"
-        android:layout_toEndOf="@+id/detail_chore_pic"
-        android:layout_toRightOf="@+id/detail_chore_pic"
-        android:elevation="4dp"
-        app:columnCount="2">
-
-        <TextView
-            android:id="@+id/detail_chore_due_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            android:text="Due: Mon, Dec 26 @ 2pm"
-            app:layout_columnSpan="2"
+            android:layout_marginStart="8dp"
             app:layout_columnWeight="1"
-            app:layout_gravity="left" />
-
-        <TextView
-            android:id="@+id/detail_chore_status_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Approval Status" />
+            tools:text="1,525" />
     </android.support.v7.widget.GridLayout>
+
+    <TextView
+        android:id="@+id/detail_chore_due_date"
+        style="@style/MaterialDesignHorizontalMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/detail_chore_title"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/frame_layout"
+        android:gravity="end"
+        tools:text="Due: Mon, Dec 26 @ 2pm" />
+
+    <TextView
+        android:id="@+id/detail_chore_status_textview"
+        style="@style/MaterialDesignHorizontalMargin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/detail_chore_due_date"
+        android:layout_toEndOf="@id/frame_layout"
+        android:gravity="end"
+        android:text="@string/detail_approval_status" />
 
 </RelativeLayout>
