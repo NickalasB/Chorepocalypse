@@ -68,6 +68,7 @@ public class ChoreDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chore_detail, container, false);
         ButterKnife.bind(this, rootView);
+        mProgressBar.setVisibility(View.GONE);
         return rootView;
     }
 
