@@ -57,7 +57,9 @@ public class PhotoUploadIntentService extends IntentService {
                 final Chore chore = intent.getParcelableExtra(EXTRA_CHORE);
                 final String photoUri = intent.getStringExtra(EXTRA_PHOTO_URI);
                 try {
-                    uploadPhoto(chore, photoUri);
+                    if (photoUri != null) {
+                        uploadPhoto(chore, photoUri);
+                    }
                 } catch (ExecutionException e) {
                     displayErrorNotification();
                 } catch (InterruptedException e) {

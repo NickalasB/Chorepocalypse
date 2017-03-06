@@ -119,13 +119,11 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public void onDataSetChanged() {
-        choreList.clear();
-        populateChoreWidgetList();
 
     }
 
     @Override
     public void onDestroy() {
-        choreList.clear();
+
     }
 }
