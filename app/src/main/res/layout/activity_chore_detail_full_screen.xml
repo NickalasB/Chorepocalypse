@@ -16,19 +16,23 @@
         style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/full_screen_detail_chore_pic"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/full_screen_detail_chore_pic"
-        android:text="Add a chore!"
         android:textSize="32sp"
-        app:layout_columnSpan="3" />
+        tools:text="Clean sink"
+        android:gravity="center_horizontal"/>
+
+    <FrameLayout
+        android:id="@+id/full_screen_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/full_screen_detail_chore_title"
+        android:layout_centerInParent="true">
 
     <com.makeramen.roundedimageview.RoundedImageView
         android:id="@+id/full_screen_detail_chore_pic"
         style="@style/MaterialDesignHorizontalMargin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/full_screen_detail_chore_title"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:adjustViewBounds="true"
@@ -39,11 +43,19 @@
         app:riv_border_width="5dp"
         app:riv_corner_radius="15dp" />
 
+    <ProgressBar
+        android:id="@+id/full_screen_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+    </FrameLayout>
+
     <TextView
         android:id="@+id/full_screen_reward_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/full_screen_detail_chore_pic"
+        android:layout_below="@id/full_screen_frame_layout"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="@string/reward_value_label"
@@ -51,7 +63,7 @@
 
     <TextView
         android:id="@+id/full_screen_detail_current_chore_points"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/full_screen_detail_chore_due_date"
         android:layout_marginLeft="9dp"
@@ -69,7 +81,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:text="Due: Mon, Dec 26 @ 2pm"
+        tools:text="Due: Mon, Dec 26 @ 2pm"
         app:layout_columnSpan="2"
         app:layout_columnWeight="1"
         app:layout_gravity="left" />
@@ -81,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/full_screen_detail_chore_due_date"
         android:layout_marginTop="8dp"
-        android:text="Approval Status:" />
+        android:text="@string/detail_approval_status" />
 
     <TextView
         android:id="@+id/full_screen_approval_status"

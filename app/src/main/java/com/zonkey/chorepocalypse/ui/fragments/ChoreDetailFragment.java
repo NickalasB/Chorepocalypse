@@ -7,9 +7,13 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,6 +56,9 @@ public class ChoreDetailFragment extends Fragment {
     boolean mIsChoreApprovalRequired;
     boolean mIsChoreApproved;
 
+    @BindView(R.id.chore_detail_fragment_progress_bar)
+    ProgressBar mProgressBar;
+
     public ChoreDetailFragment() {
         // Required empty public constructor
     }
@@ -61,6 +68,7 @@ public class ChoreDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_chore_detail, container, false);
         ButterKnife.bind(this, rootView);
+        mProgressBar.setVisibility(View.GONE);
         return rootView;
     }
 
@@ -110,8 +118,22 @@ public class ChoreDetailFragment extends Fragment {
 
     public void loadChorePhoto(final Chore chore) {
         if (chore.getChorePhotoUrl() != null) {
+            mProgressBar.setVisibility(View.VISIBLE);
             Glide.with(ChoreDetailFragment.this)
                     .load(chore.getChorePhotoUrl())
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            mProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            mProgressBar.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .into(mChorePic);
         } else {
             mChorePic.setImageResource(R.drawable.sink);

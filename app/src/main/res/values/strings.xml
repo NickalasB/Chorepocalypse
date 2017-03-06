@@ -60,4 +60,6 @@
     <string name="get_to_work">Now get to work!</string>
     <string name="photo_upload_error_title">Oops- your chore didn\'t uploaded!</string>
     <string name="photo_upload_error_content_text">Please try again</string>
+    <string name="detail_approval_status">Approval Status</string>
+    <string name="detail_add_a_chore">Add a chore!</string>
 </resources>
