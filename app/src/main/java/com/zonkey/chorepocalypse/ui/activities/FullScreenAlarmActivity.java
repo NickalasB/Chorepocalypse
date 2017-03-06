@@ -10,9 +10,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -35,11 +39,14 @@ public class FullScreenAlarmActivity extends AppCompatActivity {
 
     public static final String CHORES = "chores";
 
-    @BindView(R.id.fullscreen_chore_pic)
+    @BindView(R.id.fullscreen_alarm_chore_pic)
     RoundedImageView mFullScreenChorePic;
 
-    @BindView(R.id.fullscreen_chore_title)
+    @BindView(R.id.fullscreen_alarm_chore_title)
     TextView mFullScreenChoreTitle;
+
+    @BindView(R.id.full_screen_alarm_progress_bar)
+    ProgressBar mFullScreenProgressBar;
 
     private static final boolean AUTO_HIDE = true;
     private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
@@ -105,7 +112,7 @@ public class FullScreenAlarmActivity extends AppCompatActivity {
         setTitle(R.string.app_name);
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
-        mContentView = findViewById(R.id.fullscreen_chore_pic);
+        mContentView = findViewById(R.id.fullscreen_alarm_chore_pic);
 
         // Set up the user interaction to manually show or hide the system UI.
         mContentView.setOnClickListener(new View.OnClickListener() {
@@ -186,8 +193,22 @@ public class FullScreenAlarmActivity extends AppCompatActivity {
 
             void loadChorePhoto(Chore chore) {
                 if (chore.getChorePhotoUrl() != null) {
+                    mFullScreenProgressBar.setVisibility(View.VISIBLE);
                     Glide.with(FullScreenAlarmActivity.this)
                             .load(chore.getChorePhotoUrl())
+                            .listener(new RequestListener<String, GlideDrawable>() {
+                                @Override
+                                public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                                    mFullScreenProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                                    mFullScreenProgressBar.setVisibility(View.GONE);
+                                    return false;
+                                }
+                            })
                             .into(mFullScreenChorePic);
                 } else {
                     mFullScreenChorePic.setImageResource(R.drawable.sink);
