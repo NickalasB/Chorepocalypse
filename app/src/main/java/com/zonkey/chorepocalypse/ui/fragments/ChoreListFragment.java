@@ -67,6 +67,7 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
         } else {
             mEmptyRecyclerView.setVisibility(View.GONE);
         }
+        mChoreListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -77,7 +78,6 @@ public class ChoreListFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public void onLoadFinished(Loader<List<Chore>> loader, List<Chore> data) {
         mChoreListAdapter.setData(data);
-
     }
 
     @Override

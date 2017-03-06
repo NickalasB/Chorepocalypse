@@ -337,6 +337,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         int[] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
         Intent intent = new Intent(this, ChoreWidgetProvider.class);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(AppWidgetManager.ACTION_APPWIDGET_UPDATE, ids);
         sendBroadcast(intent);
     }
 }

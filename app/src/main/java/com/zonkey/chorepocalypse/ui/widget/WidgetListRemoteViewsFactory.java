@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by nickbradshaw on 2/25/17.
  */
-class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final String CHORES = "chores";
     private static final String NAME = "NAME";
@@ -30,8 +30,10 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     private ArrayList<Chore> choreList = new ArrayList<>();
     private Context context = null;
+    private Intent intent;
 
     WidgetListRemoteViewsFactory(Context context, Intent intent) {
+        this.intent = intent;
         this.context = context;
     }
 
@@ -75,7 +77,6 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
         remoteView.setTextViewText(R.id.chore_widget_chore_name_textview, choreWidgetChoreName);
         remoteView.setTextViewText(R.id.chore_widget_chore_due_date_textview, formattedDueDate);
 
-        final Intent intent = new Intent();
         intent.putExtra(NAME, choreWidgetChoreName);
         intent.putExtra(DATE, formattedDueDate);
         intent.putExtra(REWARD, choreWidgetChoreReward);
@@ -119,7 +120,7 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public void onDataSetChanged() {
-
+        populateChoreWidgetList();
     }
 
     @Override
