@@ -94,6 +94,10 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
         ChoreListFragment choreListFragment = (ChoreListFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.chore_list_fragment);
         choreListFragment.onItemCountChange(itemCount);
+        updateWidgets();
+    }
+
+    public void updateWidgets() {
         ComponentName name = new ComponentName(this, ChoreWidgetProvider.class);
         int[] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
         Intent intent = new Intent(this, ChoreWidgetProvider.class);
