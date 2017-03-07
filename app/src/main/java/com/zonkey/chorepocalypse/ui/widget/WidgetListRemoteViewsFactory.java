@@ -38,7 +38,7 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
     }
 
     private void populateChoreWidgetList() {
-        final DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(CHORES);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(CHORES);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
