@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by nickbradshaw on 2/25/17.
  */
-class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final String CHORES = "chores";
     private static final String NAME = "NAME";
@@ -28,11 +28,13 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     private static final String APPROVAL_STATUS = "APPROVAL_STATUS";
     private static final String PHOTO = "PHOTO";
 
-    private ArrayList<Chore> choreList = new ArrayList<>();
-    private Context context = null;
+    private ArrayList<Chore> mChoreList = new ArrayList<>();
+    private Context mContext = null;
+    private Intent mIntent;
 
     WidgetListRemoteViewsFactory(Context context, Intent intent) {
-        this.context = context;
+        this.mIntent = intent;
+        this.mContext = context;
     }
 
     private void populateChoreWidgetList() {
@@ -40,8 +42,9 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                mChoreList.clear();
                 for (DataSnapshot choreSnapshot : dataSnapshot.getChildren()) {
-                    choreList.add(choreSnapshot.getValue(Chore.class));
+                    mChoreList.add(choreSnapshot.getValue(Chore.class));
                 }
             }
 
@@ -53,7 +56,7 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public int getCount() {
-        return choreList.size();
+        return mChoreList.size();
     }
 
     @Override
@@ -64,25 +67,24 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
     @Override
     public RemoteViews getViewAt(int position) {
         final RemoteViews remoteView = new RemoteViews(
-                context.getPackageName(), R.layout.chore_widget_item);
+                mContext.getPackageName(), R.layout.chore_widget_item);
 
-        String choreWidgetChoreReward = choreList.get(position).getChoreReward();
-        boolean choreWidgetApprovalStatus = choreList.get(position).getIsChoreApproved();
-        String choreWidgetPhotoUrl = choreList.get(position).getChorePhotoUrl();
-        String choreWidgetChoreName = choreList.get(position).getChoreName();
+        String choreWidgetChoreReward = mChoreList.get(position).getChoreReward();
+        boolean choreWidgetApprovalStatus = mChoreList.get(position).getIsChoreApproved();
+        String choreWidgetPhotoUrl = mChoreList.get(position).getChorePhotoUrl();
+        String choreWidgetChoreName = mChoreList.get(position).getChoreName();
         String formattedDueDate = getFormattedDueDate(position);
 
         remoteView.setTextViewText(R.id.chore_widget_chore_name_textview, choreWidgetChoreName);
         remoteView.setTextViewText(R.id.chore_widget_chore_due_date_textview, formattedDueDate);
 
-        final Intent intent = new Intent();
-        intent.putExtra(NAME, choreWidgetChoreName);
-        intent.putExtra(DATE, formattedDueDate);
-        intent.putExtra(REWARD, choreWidgetChoreReward);
-        intent.putExtra(APPROVAL_STATUS, choreWidgetApprovalStatus);
-        intent.putExtra(PHOTO, choreWidgetPhotoUrl);
+        mIntent.putExtra(NAME, choreWidgetChoreName);
+        mIntent.putExtra(DATE, formattedDueDate);
+        mIntent.putExtra(REWARD, choreWidgetChoreReward);
+        mIntent.putExtra(APPROVAL_STATUS, choreWidgetApprovalStatus);
+        mIntent.putExtra(PHOTO, choreWidgetPhotoUrl);
 
-        remoteView.setOnClickFillInIntent(R.id.widget_single_chore_linear_layout, intent);
+        remoteView.setOnClickFillInIntent(R.id.widget_single_chore_linear_layout, mIntent);
         return remoteView;
     }
 
@@ -91,9 +93,9 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
         String choreDateString;
         int timeFlag = DateUtils.FORMAT_SHOW_TIME;
         int dateFlag = DateUtils.FORMAT_NUMERIC_DATE;
-        choreTimeString = DateUtils.formatDateTime(context, choreList.get(position).getChoreTime(), timeFlag);
-        choreDateString = DateUtils.formatDateTime(context, choreList.get(position).getChoreTime(), dateFlag);
-        return String.format("%s%s%s%s", context.getString(R.string.detail_due_string), choreDateString, context.getString(R.string.add_chore_at_string), choreTimeString);
+        choreTimeString = DateUtils.formatDateTime(mContext, mChoreList.get(position).getChoreTime(), timeFlag);
+        choreDateString = DateUtils.formatDateTime(mContext, mChoreList.get(position).getChoreTime(), dateFlag);
+        return String.format("%s%s%s%s", mContext.getString(R.string.detail_due_string), choreDateString, mContext.getString(R.string.add_chore_at_string), choreTimeString);
     }
 
 
@@ -119,7 +121,7 @@ class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteViewsFact
 
     @Override
     public void onDataSetChanged() {
-
+        populateChoreWidgetList();
     }
 
     @Override
