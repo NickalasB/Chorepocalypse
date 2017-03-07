@@ -1,5 +1,7 @@
 package com.zonkey.chorepocalypse.ui.activities;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.ui.adapters.BaseChoreListAdapter;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreDetailFragment;
 import com.zonkey.chorepocalypse.ui.fragments.ChoreListFragment;
+import com.zonkey.chorepocalypse.ui.widget.ChoreWidgetProvider;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,5 +94,11 @@ public class MainActivity extends AppCompatActivity implements BaseChoreListAdap
         ChoreListFragment choreListFragment = (ChoreListFragment)getSupportFragmentManager()
                 .findFragmentById(R.id.chore_list_fragment);
         choreListFragment.onItemCountChange(itemCount);
+        ComponentName name = new ComponentName(this, ChoreWidgetProvider.class);
+        int[] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
+        Intent intent = new Intent(this, ChoreWidgetProvider.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        intent.putExtra(AppWidgetManager.ACTION_APPWIDGET_UPDATE, ids);
+        sendBroadcast(intent);
     }
 }

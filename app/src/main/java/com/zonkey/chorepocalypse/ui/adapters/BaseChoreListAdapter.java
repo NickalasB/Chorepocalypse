@@ -58,6 +58,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
 
         void onItemCountChange(int itemCount);
 
+
     }
 
     public BaseChoreListAdapter(ChoreListAdapterInterface adapterInterface, Context context) {
@@ -133,7 +134,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
         Chore previousChore = mChoreList.remove(fromPosition);
-        mChoreList.add(toPosition > fromPosition ? toPosition -1 : toPosition, previousChore);
+        mChoreList.add(toPosition > fromPosition ? toPosition - 1 : toPosition, previousChore);
         notifyItemRemoved(fromPosition);
     }
 
@@ -143,6 +144,7 @@ public class BaseChoreListAdapter extends RecyclerView.Adapter<ChoreListAdapterV
         removeChoreFromFirebaseDatabase(position);
         mChoreList.remove(position);
         notifyItemRemoved(position);
+        mInterface.onItemCountChange(mChoreList.size());
     }
 
     private void removeChoreFromFirebaseDatabase(int position) {
