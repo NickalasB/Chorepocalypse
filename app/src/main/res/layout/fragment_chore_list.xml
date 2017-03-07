@@ -23,6 +23,6 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        android:text="no chores yet" />
+        android:text="@string/no_chores_yet" />
 
 </FrameLayout>

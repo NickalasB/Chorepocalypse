@@ -37,7 +37,7 @@
         app:riv_border_color="@color/colorBackground"
         app:riv_border_width="5dp"
         app:riv_corner_radius="15dp"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <ImageButton
         android:id="@+id/add_chore_photo_picker_button"
@@ -70,7 +70,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginLeft="4dp"
-            android:text="Set deadline" />
+            android:text="@string/add_chore_set_deadline"
+            android:contentDescription="@string/add_chore_set_deadline"/>
 
         <TextView
             android:id="@+id/add_chore_due_date_textview"
@@ -78,7 +79,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginLeft="6dp"
-            android:text="Chore due by..." />
+            android:text="@string/add_chore_due_by"
+            android:contentDescription="@string/add_chore_due_by"/>
 
         <CheckBox
             android:id="@+id/chore_checkbox"
@@ -86,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:checked="true"
-            android:text="needs approval"
+            android:text="@string/add_chore_needs_approval"
             android:textColor="@android:color/secondary_text_dark_nodisable" />
     </LinearLayout>
 
@@ -107,7 +109,7 @@
 
         <EditText
             android:id="@+id/current_chore_points"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/add_chore_points_hint" />
@@ -120,6 +122,7 @@
         android:layout_below="@id/reward_value_linear_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
-        android:text="@string/add_chore_button_text" />
+        android:text="@string/add_chore_button_text"
+        android:contentDescription="@string/add_chore_button_text"/>
 
 </RelativeLayout>

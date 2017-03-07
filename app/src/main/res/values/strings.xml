@@ -13,7 +13,7 @@
     <!--Add chore screen-->
     <string name="add_chore_name_hint">Chore Name</string>
     <string name="add_chore_points_hint">Add chore points</string>
-    <string name="add_chore_needs_approval">Needs Approval?</string>
+    <string name="add_chore_needs_approval">Needs Approval</string>
     <string name="add_chore_button_text">Add Chore</string>
     <string name="add_chore_past_time_text">That\'s in the past silly!</string>
     <string name="add_chore_change_date_text">Change</string>
@@ -62,4 +62,8 @@
     <string name="photo_upload_error_content_text">Please try again</string>
     <string name="detail_approval_status">Approval Status</string>
     <string name="detail_add_a_chore">Add a chore!</string>
+    <string name="add_chore_set_deadline">Set deadline</string>
+    <string name="add_chore_due_by">Chore due by...</string>
+    <string name="complete">Complete</string>
+    <string name="no_chores_yet">NO CHORES... YET!</string>
 </resources>
