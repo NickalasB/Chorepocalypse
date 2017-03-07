@@ -332,7 +332,7 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
     }
 
     // TODO: 2/27/17 figure out how to update widgets
-    private void updateWidgets() {
+    public void updateWidgets() {
         ComponentName name = new ComponentName(this, ChoreWidgetProvider.class);
         int[] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
         Intent intent = new Intent(this, ChoreWidgetProvider.class);
