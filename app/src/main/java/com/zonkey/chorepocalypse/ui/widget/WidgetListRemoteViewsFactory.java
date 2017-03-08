@@ -116,7 +116,6 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public void onCreate() {
-        populateChoreWidgetList();
     }
 
     @Override
