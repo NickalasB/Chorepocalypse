@@ -66,7 +66,7 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public RemoteViews getViewAt(int position) {
-        final RemoteViews remoteView = new RemoteViews(
+        RemoteViews remoteView = new RemoteViews(
                 mContext.getPackageName(), R.layout.chore_widget_item);
 
         String choreWidgetChoreReward = mChoreList.get(position).getChoreReward();
@@ -116,7 +116,6 @@ public class WidgetListRemoteViewsFactory implements RemoteViewsService.RemoteVi
 
     @Override
     public void onCreate() {
-        populateChoreWidgetList();
     }
 
     @Override

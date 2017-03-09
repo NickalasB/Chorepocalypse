@@ -3,8 +3,6 @@ package com.zonkey.chorepocalypse.ui.activities;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,7 +33,6 @@ import com.zonkey.chorepocalypse.models.Chore;
 import com.zonkey.chorepocalypse.receivers.AlarmReceiver;
 import com.zonkey.chorepocalypse.services.PhotoUploadIntentService;
 import com.zonkey.chorepocalypse.ui.fragments.TimePickerFragment;
-import com.zonkey.chorepocalypse.ui.widget.ChoreWidgetProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -259,7 +256,6 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
             newChoreReference.setValue(newChore);
             pushPhotoToFirebase(newChore);
             setAlarm(newChore);
-            updateWidgets();
         }
 
     }
@@ -329,15 +325,5 @@ public class AddChoreActivity extends AppCompatActivity implements TimePickerFra
         } else {
             alarmManager.set(AlarmManager.RTC_WAKEUP, mChoreTime, pendingIntent);
         }
-    }
-
-    // TODO: 2/27/17 figure out how to update widgets
-    public void updateWidgets() {
-        ComponentName name = new ComponentName(this, ChoreWidgetProvider.class);
-        int[] ids = AppWidgetManager.getInstance(this).getAppWidgetIds(name);
-        Intent intent = new Intent(this, ChoreWidgetProvider.class);
-        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
-        intent.putExtra(AppWidgetManager.ACTION_APPWIDGET_UPDATE, ids);
-        sendBroadcast(intent);
     }
 }
