@@ -71,13 +71,21 @@ public class Chore implements Parcelable {
         this.choreKey = choreKey;
     }
 
-    public boolean getIsChoreApprovalRequired() {return isChoreApprovalRequired;}
+    public boolean getIsChoreApprovalRequired() {
+        return isChoreApprovalRequired;
+    }
 
-    public void setChoreApprovalRequired(boolean choreApprovalRequired) {this.isChoreApprovalRequired = choreApprovalRequired;}
+    public void setChoreApprovalRequired(boolean choreApprovalRequired) {
+        this.isChoreApprovalRequired = choreApprovalRequired;
+    }
 
-    public boolean getIsChoreApproved() {return isChoreApproved;}
+    public boolean getIsChoreApproved() {
+        return isChoreApproved;
+    }
 
-    public void setChoreApproved(boolean choreApproved) {this.isChoreApproved = choreApproved;}
+    public void setChoreApproved(boolean choreApproved) {
+        this.isChoreApproved = choreApproved;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -148,67 +156,4 @@ public class Chore implements Parcelable {
             return new Chore[size];
         }
     };
-
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//
-//        Chore chore = (Chore) o;
-//
-//        if (choreTime != chore.choreTime) return false;
-//        if (choreName != null ? !choreName.equals(chore.choreName) : chore.choreName != null)
-//            return false;
-//        if (choreReward != null ? !choreReward.equals(chore.choreReward) : chore.choreReward != null)
-//            return false;
-//        if (chorePhotoUrl != null ? !chorePhotoUrl.equals(chore.chorePhotoUrl) : chore.chorePhotoUrl != null)
-//            return false;
-//        return choreKey != null ? choreKey.equals(chore.choreKey) : chore.choreKey == null;
-//
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        int result = choreName != null ? choreName.hashCode() : 0;
-//        result = 31 * result + (choreReward != null ? choreReward.hashCode() : 0);
-//        result = 31 * result + (chorePhotoUrl != null ? chorePhotoUrl.hashCode() : 0);
-//        result = 31 * result + (int) (choreTime ^ (choreTime >>> 32));
-//        result = 31 * result + (choreKey != null ? choreKey.hashCode() : 0);
-//        return result;
-//    }
-//
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeString(this.choreName);
-//        dest.writeString(this.choreReward);
-//        dest.writeString(this.chorePhotoUrl);
-//        dest.writeLong(this.choreTime);
-//        dest.writeString(this.choreKey);
-//    }
-//
-//    protected Chore(Parcel in) {
-//        this.choreName = in.readString();
-//        this.choreReward = in.readString();
-//        this.chorePhotoUrl = in.readString();
-//        this.choreTime = in.readLong();
-//        this.choreKey = in.readString();
-//    }
-//
-//    public static final Parcelable.Creator<Chore> CREATOR = new Parcelable.Creator<Chore>() {
-//        @Override
-//        public Chore createFromParcel(Parcel source) {
-//            return new Chore(source);
-//        }
-//
-//        @Override
-//        public Chore[] newArray(int size) {
-//            return new Chore[size];
-//        }
-//    };
 }
